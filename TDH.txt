@@ -1,0 +1,347 @@
+Điện thoại
+      │
+Internet
+      │
+Cloud (MQTT/Firebase/Server)
+      │
+Router 4G/Wifi
+      │
+Gateway (ESP32 hoặc Raspberry Pi)
+      │
+PLC Mitsubishi
+      │
+────────────────────────────
+│        │        │
+Đèn     Bơm     Quạt
+│        │        │
+Cảm biến nhiệt độ
+Cảm biến độ ẩm đất
+Cảm biến mực nước
+...
+Phần cứng nên chuẩn bị
+1. PLC (bộ điều khiển chính)
+
+Nếu đã học Mitsubishi thì tiếp tục dùng là hợp lý.
+
+Ví dụ:
+
+FX3U
+FX5U (tốt hơn)
+iQ-F
+
+PLC sẽ điều khiển:
+
+Bơm nước
+Quạt
+Đèn
+Van điện từ
+Relay
+Motor
+2. Gateway IoT
+
+Đây là thiết bị kết nối PLC với Internet.
+
+Có hai lựa chọn phổ biến:
+
+ESP32 (khuyên dùng để học)
+
+Giá khoảng 100.000–200.000 VNĐ.
+
+Ưu điểm:
+
+Có WiFi
+Có Bluetooth
+Chạy MQTT
+Kết nối Firebase
+Gửi Telegram
+Điều khiển qua app
+Raspberry Pi
+
+Nếu muốn làm hệ thống lớn hơn.
+
+Có thể chạy:
+
+Node-RED
+MQTT Broker
+Web Server
+Cơ sở dữ liệu
+Dashboard
+3. Module truyền thông PLC
+
+Nếu PLC không có Ethernet thì cần:
+
+Module Ethernet
+Hoặc RS485
+
+ESP32 có thể giao tiếp PLC qua:
+
+Modbus RTU
+Modbus TCP
+MC Protocol (Mitsubishi)
+4. Router Internet
+
+Có thể dùng:
+
+WiFi
+Router 4G gắn SIM
+
+Trang trại thường dùng Router 4G vì ổn định ở nơi không có cáp mạng.
+
+5. Cảm biến
+
+Ví dụ:
+
+Nhiệt độ
+Độ ẩm không khí
+Độ ẩm đất
+pH nước
+EC
+Mực nước
+Ánh sáng
+Mưa
+Khí CO₂
+6. Thiết bị chấp hành
+Relay
+Contactor
+Van điện từ
+Máy bơm
+Quạt
+Đèn
+Máy cho ăn
+Motor
+Phần mềm
+PLC
+GX Works2
+GX Works3
+
+Viết chương trình điều khiển.
+
+Gateway
+
+ESP32 hoặc Raspberry Pi sẽ:
+
+Đọc dữ liệu PLC
+
+↓
+
+Đưa lên Internet
+
+↓
+
+Nhận lệnh từ điện thoại
+
+↓
+
+Gửi về PLC
+
+Server
+
+Có thể dùng:
+
+MQTT
+Firebase
+Node-RED
+ThingsBoard
+Blynk
+Home Assistant
+Điện thoại
+
+Có thể chọn:
+
+Dễ nhất
+Blynk
+
+Chỉ vài giờ là có app điều khiển.
+
+Chuyên nghiệp hơn
+Flutter
+React Native
+
+Tự viết ứng dụng Android/iOS.
+
+Lộ trình học mình gợi ý
+Giai đoạn 1
+
+✅ PLC bật/tắt đèn
+
+↓
+
+Đọc cảm biến
+
+↓
+
+Điều khiển relay
+
+Giai đoạn 2
+
+PLC
+
+↓
+
+ESP32
+
+↓
+
+MQTT
+
+↓
+
+Điện thoại
+
+Bật/tắt được từ xa.
+
+Giai đoạn 3
+
+Điện thoại
+
+↓
+
+Điều khiển bơm
+
+↓
+
+PLC
+
+↓
+
+Bơm chạy
+
+Đồng thời điện thoại nhận phản hồi:
+
+Bơm đang chạy
+Quạt đang chạy
+Đèn đã bật
+Giai đoạn 4
+
+Tự động hóa
+
+Ví dụ:
+
+Nếu độ ẩm đất < 35%
+
+↓
+
+PLC bật bơm
+
+↓
+
+Sau 10 phút
+
+↓
+
+Kiểm tra lại độ ẩm
+
+↓
+
+Nếu >45%
+
+↓
+
+Tắt bơm
+Giai đoạn 5
+
+Lưu dữ liệu
+
+Hiển thị trên điện thoại:
+
+Nhiệt độ: 30°C
+
+Độ ẩm đất: 42%
+
+Độ ẩm không khí: 78%
+
+Mực nước: 75%
+
+Máy bơm: ON
+
+Có thể xem lịch sử theo ngày, tuần hoặc tháng.
+
+Nếu là đồ án tốt nghiệp
+
+Mình sẽ chọn cấu hình như sau vì cân bằng giữa chi phí và tính thực tế:
+
+PLC Mitsubishi FX5U (hoặc FX3U nếu đã có).
+ESP32 làm gateway IoT.
+Router 4G để kết nối Internet.
+Cảm biến nhiệt độ/độ ẩm không khí, độ ẩm đất, mực nước.
+Relay hoặc contactor để điều khiển bơm, quạt, đèn và van điện từ.
+Giao tiếp giữa PLC và ESP32 bằng Modbus RTU (RS-485) hoặc Ethernet nếu PLC hỗ trợ.
+MQTT làm giao thức truyền dữ liệu.
+Node-RED để xử lý logic và tạo dashboard.
+Ứng dụng điện thoại tự viết bằng Flutter (hoặc dùng Blynk nếu muốn hoàn thành nhanh).
+
+Lưu ý: Đừng để ESP32 điều khiển trực tiếp các thiết bị công suất lớn nếu bạn đã có PLC. Hãy để PLC là bộ điều khiển trung tâm (đảm bảo an toàn và hoạt động ngay cả khi mất mạng), còn ESP32 chỉ làm nhiệm vụ kết nối Internet và truyền dữ liệu. Khi đó:
+
+Mất Internet → PLC vẫn vận hành tự động.
+Có Internet → Bạn giám sát và điều khiển từ xa qua điện thoại.
+Phương án 1: Mô hình học tập (khuyến nghị)
+Thiết bị	SL	Giá tham khảo (VNĐ)
+PLC Mitsubishi FX3U-32MT (hàng cũ tốt)	1	2.500.000
+Module RS485 FX3U-485-BD	1	700.000
+ESP32 DevKit V1	1	150.000
+Module MAX485	1	30.000
+Nguồn 24VDC 5A (Mean Well hoặc tương đương)	1	450.000
+Aptomat (MCB) 2P 6A	1	150.000
+Cầu đấu (Terminal Block)	10	150.000
+Thanh DIN	1	70.000
+Máng đi dây	1	100.000
+Vỏ tủ điện 300×400	1	500.000
+Relay trung gian 24VDC + đế	2	300.000
+Nút nhấn Start/Stop	2	120.000
+Đèn báo 24V	3	90.000
+Cảm biến độ ẩm đất	1	120.000
+Cảm biến DHT22	1	120.000
+Công tắc phao mực nước	1	80.000
+Router WiFi	1	500.000
+Dây điện, cos, phụ kiện	-	400.000
+
+Tổng khoảng: 6,5–7,0 triệu đồng.
+
+Phương án 2: Mô hình công nghiệp hơn
+
+Nếu bạn muốn làm một mô hình đẹp để bảo vệ đồ án hoặc trình diễn:
+
+Thiết bị	Giá (VNĐ)
+PLC FX5U (mới)	8.000.000–12.000.000
+Module Ethernet/RS485	1.000.000–2.000.000
+Nguồn Mean Well chính hãng	600.000
+Schneider/LS MCB	250.000
+Relay Omron	500.000
+Contactor LS	400.000
+ESP32	150.000
+Router 4G	1.500.000
+Cảm biến công nghiệp	2.000.000+
+Tủ điện	1.000.000
+
+Tổng khoảng 15–20 triệu đồng.
+
+Mình khuyên bạn chọn phương án nào?
+
+Nếu bạn là sinh viên hoặc đang tự học PLC, mình sẽ không khuyên mua FX5U ngay.
+
+Mình sẽ đầu tư theo thứ tự:
+
+PLC FX3U-32MT (~2,5 triệu)
+Nguồn 24VDC (~450 nghìn)
+ESP32 + MAX485 (~180 nghìn)
+Module RS485 cho FX3U (~700 nghìn)
+Tủ điện + MCB + cầu đấu + máng dây (~1 triệu)
+Relay, nút nhấn, đèn báo (~500 nghìn)
+Cảm biến (~300–500 nghìn)
+Router WiFi (~500 nghìn)
+
+=> Tổng khoảng 6,5–7 triệu đồng, nhưng bạn đã có một hệ thống đủ để:
+
+Lập trình PLC bằng GX Works2.
+Điều khiển thiết bị thực.
+Kết nối ESP32.
+Gửi dữ liệu lên Internet.
+Điều khiển và giám sát bằng điện thoại.
+Mở rộng thêm nhiều cảm biến sau này.
+Một gợi ý giúp tiết kiệm đáng kể
+
+Nếu mục tiêu của bạn là học và làm đồ án, mình khuyên mua PLC FX3U cũ chính hãng (hoặc hàng đã qua sử dụng còn tốt) thay vì mới. Phần tiết kiệm được có thể dùng để mua:
+
+Tủ điện đẹp.
+Cảm biến chất lượng hơn.
+Một Router 4G (để mô phỏng trang trại ở nơi không có WiFi).
