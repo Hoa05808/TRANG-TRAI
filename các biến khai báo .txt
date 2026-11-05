@@ -1,0 +1,121 @@
+3.1. Vùng X – Đầu vào vật lý
+Địa chỉ	Tên chức năng	Ý nghĩa
+X000	START	Nút khởi động
+X001	STOP	Nút dừng
+X002	EMERGENCY	Dừng khẩn cấp
+X003	WATER_LOW	Mực nước thấp
+X004	WATER_HIGH	Mực nước cao
+X005	DOOR_SENSOR	Cảm biến cửa
+X006	MANUAL_AUTO	Chọn chế độ
+
+Đây là danh sách dự kiến. Khi có phần cứng thật, chúng ta sẽ kiểm tra số lượng và cách đấu nối thực tế.
+3.2. Vùng Y – Đầu ra vật lý
+Địa chỉ	Tên chức năng	Ý nghĩa
+Y000	PUMP_1	Bơm nước
+Y001	FAN_1	Quạt 1
+Y002	FAN_2	Quạt 2
+Y003	LIGHT_1	Đèn
+Y004	VALVE_1	Van điện từ
+Y005	ALARM_BUZZER	Còi cảnh báo
+Y006	RUN_LAMP	Đèn báo chạy
+Y007	ERROR_LAMP	Đèn báo lỗi
+
+Lưu ý: Không được lấy trực tiếp lệnh điều khiển từ Internet để kích Y. Các đầu ra phải đi qua logic điều khiển và liên động an toàn.
+3.3. Vùng M – Các bit nội bộ
+Tôi đề xuất quy hoạch như sau:
+Vùng	Chức năng
+M0–M9	Trạng thái hệ thống
+M10–M19	Chế độ Auto/Manual
+M20–M39	Điều khiển bơm
+M40–M59	Điều khiển quạt
+M60–M79	Điều khiển đèn
+M80–M99	Điều khiển van
+M100–M129	Cảnh báo
+M130–M149	Lỗi hệ thống
+M150–M169	Giao tiếp Gateway
+M170–M199	Lệnh từ xa
+
+Ví dụ:
+Địa chỉ	Tên
+M0	SYSTEM_READY
+M1	SYSTEM_RUN
+M2	SYSTEM_ERROR
+M10	MODE_AUTO
+M11	MODE_MANUAL
+M20	PUMP_AUTO
+M21	PUMP_MANUAL
+M100	ALARM_TEMP_HIGH
+M101	ALARM_WATER_LOW
+M102	ALARM_PUMP_TIMEOUT
+M150	GATEWAY_ONLINE
+M151	GATEWAY_COMMAND_VALID
+M170	REMOTE_PUMP_START
+M171	REMOTE_PUMP_STOP
+
+Các bit M170 trở đi chỉ là vùng yêu cầu điều khiển, không phải tín hiệu xuất trực tiếp ra thiết bị.
+3.4. Vùng D – Thanh ghi dữ liệu
+Đây là vùng mà ESP32 và hệ thống AI sẽ thường xuyên đọc.
+
+Tôi đề xuất chia thành 6 vùng:
+Vùng thanh ghi	Chức năng
+D0–D49	Thông số cài đặt
+D50–D99	Dữ liệu cảm biến
+D100–D149	Trạng thái thiết bị
+D150–D199	Cảnh báo
+D200–D299	Giao tiếp IoT
+D300–D399	Dữ liệu thống kê
+
+Ví dụ chi tiết:
+
+A. Dữ liệu cảm biến
+Thanh ghi	Nội dung	Đơn vị
+D50	Nhiệt độ chuồng gà	°C × 10
+D51	Độ ẩm không khí	% × 10
+D52	Nhiệt độ nước	°C × 10
+D53	Mực nước bể	% × 10
+D54	Độ ẩm đất	% × 10
+D55	Giá trị ánh sáng	Lux hoặc giá trị quy đổi
+
+Ví dụ:
+- D50 = 325 → 32,5°C.
+- D51 = 780 → 78,0%.
+- D53 = 250 → 25,0%.
+Sử dụng số nguyên đã nhân hệ số 10 giúp dễ truyền dữ liệu và tránh vấn đề số thực khi giao tiếp.
+
+B. Thông số cài đặt
+Thanh ghi	Nội dung
+D0	Nhiệt độ bật quạt
+D1	Nhiệt độ tắt quạt
+D2	Mực nước bật bơm
+D3	Mực nước tắt bơm
+D4	Thời gian chạy bơm tối đa
+D5	Thời gian trễ cảnh báo
+D6	Nhiệt độ cảnh báo nguy hiểm
+
+C. Trạng thái thiết bị
+Thanh ghi	Nội dung
+D100	Trạng thái bơm
+D101	Trạng thái quạt 1
+D102	Trạng thái quạt 2
+D103	Trạng thái đèn
+D104	Trạng thái van
+D105	Chế độ vận hành
+D106	Trạng thái PLC
+D107	Trạng thái lỗi
+
+Quy ước: 0 = OFF, 1 = ON.
+
+D. Vùng giao tiếp IoT
+Thanh ghi	Nội dung
+D200	Mã phiên bản dữ liệu
+D201	Heartbeat PLC
+D202	Heartbeat Gateway
+D203	Mã lệnh từ điện thoại
+D204	Giá trị lệnh
+D205	Mã xác nhận lệnh
+D206	Trạng thái thực hiện lệnh
+D207	Mã lỗi giao tiếp
+D208	Bộ đếm dữ liệu
+D209	Chế độ điều khiển từ xa
+
+Quy hoạch này sẽ giúp hệ thống bên ngoài biết chính xác thanh ghi nào để đọc, thanh ghi nào được phép ghi.
