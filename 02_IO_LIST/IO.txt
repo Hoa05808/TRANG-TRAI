@@ -1,0 +1,65 @@
+Device	Comment
+X0	START_BUTTON - Nút khởi động
+X1	STOP_BUTTON - Nút dừng
+X2	EMERGENCY - Dừng khẩn cấp
+X3	WATER_LOW - Cảm biến mức nước thấp
+X4	WATER_HIGH - Cảm biến mức nước cao
+X5	DOOR_SENSOR - Cảm biến cửa
+X6	AUTO_MANUAL - Công tắc Auto/Manual
+
+Device	Comment
+Y0	PUMP_1 - Điều khiển máy bơm nước
+Y1	FAN_1 - Quạt thông gió 1
+Y2	FAN_2 - Quạt thông gió 2
+Y3	LIGHT_1 - Đèn chiếu sáng
+Y4	VALVE_1 - Van cấp nước
+Y5	ALARM_BUZZER - Còi cảnh báo
+Y6	RUN_LAMP - Đèn báo hệ thống chạy
+Y7	ERROR_LAMP - Đèn báo lỗi
+
+1. Nhóm M0–M9: Trạng thái hệ thống
+Device	Comment
+M0	SYSTEM_READY - Hệ thống sẵn sàng
+M1	SYSTEM_RUN - Hệ thống đang chạy
+M2	SYSTEM_ERROR - Hệ thống có lỗi
+M3	EMERGENCY_ACTIVE - Dừng khẩn cấp
+M4	SYSTEM_STARTUP - Khởi động hệ thống
+M5	SYSTEM_STOP - Hệ thống dừng
+M6	SENSOR_READY - Cảm biến sẵn sàng
+M7	AUTO_ENABLE - Cho phép chế độ tự động
+M8	MANUAL_ENABLE - Cho phép chế độ thủ công
+M9	ALARM_ACTIVE - Đang có cảnh báo
+
+2. Nhóm M10–M19: Chế độ hoạt động
+Device	Comment
+M10	MODE_AUTO - Chế độ tự động
+M11	MODE_MANUAL - Chế độ thủ công
+M12	MODE_REMOTE - Điều khiển từ xa
+M13	MODE_LOCAL - Điều khiển tại chỗ
+M14	MODE_MAINTENANCE - Chế độ bảo trì
+M15	MODE_INITIALIZING - Đang khởi tạo
+
+Device	Comment
+M20	PUMP_AUTO_REQUEST - Yêu cầu chạy bơm tự động
+M21	PUMP_MANUAL_REQUEST - Yêu cầu chạy bơm thủ công
+M22	PUMP_REMOTE_REQUEST - Yêu cầu chạy bơm từ xa
+M23	PUMP_START_CMD - Lệnh khởi động bơm
+M24	PUMP_STOP_CMD - Lệnh dừng bơm
+M25	PUMP_RUNNING - Trạng thái bơm đang chạy
+M26	PUMP_FAULT - Lỗi máy bơm
+M27	PUMP_TIMEOUT - Bơm chạy quá thời gian cho phép
+M28	PUMP_PROTECTION_OK - Bảo vệ bơm bình thường
+M29	PUMP_INTERLOCK_OK - Điều kiện liên động cho phép bơm chạy
+
+Device	Comment
+M40	FAN_AUTO_REQUEST - Yêu cầu chạy quạt tự động
+M41	FAN_MANUAL_REQUEST - Yêu cầu chạy quạt thủ công
+M42	FAN_REMOTE_REQUEST - Yêu cầu chạy quạt từ xa
+M43	FAN1_START_CMD - Lệnh khởi động quạt 1
+M44	FAN1_STOP_CMD - Lệnh dừng quạt 1
+M45	FAN2_START_CMD - Lệnh khởi động quạt 2
+M46	FAN2_STOP_CMD - Lệnh dừng quạt 2
+M47	FAN_RUNNING - Trạng thái quạt đang chạy
+M48	FAN_FAULT - Lỗi hệ thống quạt
+M49	FAN_INTERLOCK_OK - Điều kiện liên động cho phép quạt
+
