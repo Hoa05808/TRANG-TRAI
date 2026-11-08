@@ -63,3 +63,186 @@ M47	FAN_RUNNING - Trạng thái quạt đang chạy
 M48	FAN_FAULT - Lỗi hệ thống quạt
 M49	FAN_INTERLOCK_OK - Điều kiện liên động cho phép quạt
 
+Device	Comment
+M60	LIGHT_AUTO_REQUEST - Yêu cầu bật đèn tự động
+M61	LIGHT_MANUAL_REQUEST - Yêu cầu bật đèn thủ công
+M62	LIGHT_REMOTE_REQUEST - Yêu cầu bật đèn từ xa
+M63	LIGHT_ON_CMD - Lệnh bật đèn
+M64	LIGHT_OFF_CMD - Lệnh tắt đèn
+M65	LIGHT_RUNNING - Trạng thái đèn đang bật
+M66	LIGHT_FAULT - Lỗi hệ thống đèn
+M67	LIGHT_INTERLOCK_OK - Điều kiện cho phép bật đèn
+
+Device	Comment
+M80	VALVE_AUTO_REQUEST - Yêu cầu mở van tự động
+M81	VALVE_MANUAL_REQUEST - Yêu cầu mở van thủ công
+M82	VALVE_REMOTE_REQUEST - Yêu cầu mở van từ xa
+M83	VALVE_OPEN_CMD - Lệnh mở van
+M84	VALVE_CLOSE_CMD - Lệnh đóng van
+M85	VALVE_OPENING - Trạng thái van đang mở
+M86	VALVE_FAULT - Lỗi van cấp nước
+M87	VALVE_INTERLOCK_OK - Điều kiện cho phép mở van
+M88	WATER_SUPPLY_ACTIVE - Đang cấp nước
+M89	VALVE_TIMEOUT - Van hoạt động quá thời gian
+
+Device	Comment
+M100	ALARM_TEMP_HIGH - Cảnh báo nhiệt độ cao
+M101	ALARM_WATER_LOW - Cảnh báo mức nước thấp
+M102	ALARM_PUMP_TIMEOUT - Cảnh báo bơm chạy quá thời gian
+M103	ALARM_FAN_FAULT - Cảnh báo lỗi quạt
+M104	ALARM_SENSOR_FAULT - Cảnh báo lỗi cảm biến
+M105	ALARM_GATEWAY_OFFLINE - Cảnh báo mất kết nối Gateway
+M106	ALARM_WATER_HIGH - Cảnh báo mức nước quá cao
+M107	ALARM_DOOR_OPEN - Cảnh báo cửa mở
+M108	ALARM_POWER_FAIL - Cảnh báo mất nguồn
+M109	ALARM_GENERAL - Cảnh báo tổng
+
+Device	Comment
+M130	ERROR_TEMP_SENSOR - Lỗi cảm biến nhiệt độ
+M131	ERROR_HUMIDITY_SENSOR - Lỗi cảm biến độ ẩm
+M132	ERROR_WATER_SENSOR - Lỗi cảm biến mực nước
+M133	ERROR_PUMP - Lỗi máy bơm
+M134	ERROR_FAN - Lỗi quạt
+M135	ERROR_VALVE - Lỗi van nước
+M136	ERROR_GATEWAY - Lỗi Gateway
+M137	ERROR_COMMUNICATION - Lỗi truyền thông RS485
+M138	ERROR_OVERLOAD - Lỗi quá tải thiết bị
+M139	ERROR_SYSTEM - Lỗi tổng hệ thống
+
+Device	Comment
+M150	GATEWAY_ONLINE - Gateway đang kết nối
+M151	GATEWAY_COMMAND_VALID - Lệnh Gateway hợp lệ
+M152	GATEWAY_DATA_READY - Dữ liệu Gateway sẵn sàng
+M153	RS485_TX_REQUEST - Yêu cầu gửi dữ liệu RS485
+M154	RS485_RX_COMPLETE - Nhận dữ liệu RS485 hoàn tất
+M155	RS485_COMM_ERROR - Lỗi truyền thông RS485
+M156	PLC_HEARTBEAT - Xung kiểm tra PLC
+M157	GATEWAY_HEARTBEAT - Xung kiểm tra Gateway
+M158	COMM_TIMEOUT - Quá thời gian phản hồi
+M159	COMM_RECOVERY - Đã khôi phục kết nối
+
+Device	Comment
+M170	REMOTE_PUMP_START - Yêu cầu bật bơm từ xa
+M171	REMOTE_PUMP_STOP - Yêu cầu tắt bơm từ xa
+M172	REMOTE_FAN_START - Yêu cầu bật quạt từ xa
+M173	REMOTE_FAN_STOP - Yêu cầu tắt quạt từ xa
+M174	REMOTE_LIGHT_ON - Yêu cầu bật đèn từ xa
+M175	REMOTE_LIGHT_OFF - Yêu cầu tắt đèn từ xa
+M176	REMOTE_VALVE_OPEN - Yêu cầu mở van từ xa
+M177	REMOTE_VALVE_CLOSE - Yêu cầu đóng van từ xa
+M178	REMOTE_COMMAND_ACCEPTED - Lệnh từ xa được chấp nhận
+M179	REMOTE_COMMAND_REJECTED - Lệnh từ xa bị từ chối
+
+Device	Comment	Ý nghĩa
+D0	SET_TEMP_FAN_ON	Nhiệt độ bật quạt (°C × 10)
+D1	SET_TEMP_FAN_OFF	Nhiệt độ tắt quạt (°C × 10)
+D2	SET_WATER_PUMP_ON	Ngưỡng mức nước bật bơm (%)
+D3	SET_WATER_PUMP_OFF	Ngưỡng mức nước tắt bơm (%)
+D4	SET_PUMP_MAX_TIME	Thời gian chạy bơm tối đa (giây)
+D5	SET_ALARM_DELAY	Thời gian trễ cảnh báo (giây)
+D6	SET_TEMP_ALARM_HIGH	Ngưỡng cảnh báo nhiệt độ cao (°C × 10)
+D7	SET_HUMIDITY_HIGH	Ngưỡng độ ẩm cao (%)
+D8	SET_HUMIDITY_LOW	Ngưỡng độ ẩm thấp (%)
+D9	SET_LIGHT_ON_TIME	Thời gian bật đèn theo lịch (phút)
+Device	Giá trị mẫu	Diễn giải
+D0	300	Bật quạt tại 30,0°C
+D1	280	Tắt quạt tại 28,0°C
+D2	300	Ngưỡng mức nước 30%
+D3	800	Ngưỡng mức nước 80%
+D4	300	Bơm tối đa 300 giây
+D5	5	Trễ cảnh báo 5 giây
+D6	350	Cảnh báo tại 35,0°C
+D7	850	Độ ẩm cao 85%
+D8	400	Độ ẩm thấp 40%
+D9	480	Bật đèn theo lịch 480 phút
+
+Device	Comment	Đơn vị
+D50	SENSOR_COOP_TEMP	Nhiệt độ chuồng gà (°C × 10)
+D51	SENSOR_AIR_HUMIDITY	Độ ẩm không khí (% × 10)
+D52	SENSOR_WATER_TEMP	Nhiệt độ nước (°C × 10)
+D53	SENSOR_WATER_LEVEL	Mực nước bể (% × 10)
+D54	SENSOR_SOIL_HUMIDITY	Độ ẩm đất (% × 10)
+D55	SENSOR_LIGHT_VALUE	Cường độ ánh sáng (Lux)
+D56	SENSOR_CO2_VALUE	Nồng độ CO₂ (ppm)
+D57	SENSOR_NH3_VALUE	Nồng độ NH₃ (ppm)
+D58	SENSOR_TEMP_STATUS	Trạng thái cảm biến nhiệt độ
+D59	SENSOR_DATA_STATUS	Trạng thái dữ liệu cảm biến
+Device	Giá trị mẫu	Diễn giải
+D50	325	32,5°C
+D51	750	75,0%
+D52	285	28,5°C
+D53	650	65,0%
+D54	550	55,0%
+D55	1200	1200 Lux
+D56	800	800 ppm
+D57	10	10 ppm
+D58	1	Cảm biến nhiệt độ bình thường
+D59	1	Dữ liệu cảm biến hợp lệ
+
+Device	Comment	Quy ước
+D100	STATUS_PUMP_1	0 = Tắt, 1 = Bật
+D101	STATUS_FAN_1	0 = Tắt, 1 = Bật
+D102	STATUS_FAN_2	0 = Tắt, 1 = Bật
+D103	STATUS_LIGHT_1	0 = Tắt, 1 = Bật
+D104	STATUS_VALVE_1	0 = Đóng, 1 = Mở
+D105	STATUS_OPERATION_MODE	0 = Stop, 1 = Auto, 2 = Manual
+D106	STATUS_PLC_STATE	Trạng thái PLC
+D107	STATUS_ERROR_CODE	Mã lỗi hiện tại
+D108	STATUS_ALARM_CODE	Mã cảnh báo hiện tại
+D109	STATUS_SYSTEM_UPTIME	Thời gian hoạt động hệ thống
+2. Quy ước bổ sung
+Đối với D106:
+Giá trị	Trạng thái
+0	PLC Stop
+1	PLC Run
+2	PLC Error
+
+Device	Comment	Chức năng
+D200	COMM_DATA_VERSION	Phiên bản cấu trúc dữ liệu
+D201	PLC_HEARTBEAT_COUNTER	Bộ đếm heartbeat PLC
+D202	GATEWAY_HEARTBEAT_COUNTER	Bộ đếm heartbeat Gateway
+D203	REMOTE_COMMAND_ID	Mã lệnh điều khiển từ xa
+D204	REMOTE_COMMAND_VALUE	Giá trị lệnh điều khiển
+D205	REMOTE_ACK_COMMAND_ID	Mã lệnh PLC đã xác nhận
+D206	REMOTE_COMMAND_RESULT	Kết quả xử lý lệnh
+D207	COMM_ERROR_CODE	Mã lỗi truyền thông
+D208	COMM_DATA_COUNTER	Bộ đếm dữ liệu trao đổi
+D209	REMOTE_CONTROL_MODE	Trạng thái cho phép điều khiển từ xa
+
+2. Quy ước dữ liệu ban đầu
+D203 – REMOTE_COMMAND_ID
+Giá trị	Lệnh
+0	Không có lệnh
+1	Bật bơm
+2	Tắt bơm
+3	Bật quạt
+4	Tắt quạt
+5	Bật đèn
+6	Tắt đèn
+7	Mở van
+8	Đóng van
+D206 – REMOTE_COMMAND_RESULT
+Giá trị	Ý nghĩa
+0	Chưa xử lý
+1	Đã chấp nhận
+2	Đã từ chối
+3	Đã thực hiện
+4	Lỗi thực hiện
+D209 – REMOTE_CONTROL_MODE
+Giá trị	Ý nghĩa
+0	Không cho phép điều khiển từ xa
+1	Cho phép điều khiển từ xa
+
+Device	Comment	Chức năng
+D300	STAT_PUMP_START_COUNT	Tổng số lần khởi động bơm
+D301	STAT_PUMP_RUNTIME_MIN	Tổng thời gian chạy bơm (phút)
+D302	STAT_FAN_RUNTIME_MIN	Tổng thời gian chạy quạt (phút)
+D303	STAT_LIGHT_RUNTIME_MIN	Tổng thời gian bật đèn (phút)
+D304	STAT_VALVE_OPEN_COUNT	Tổng số lần mở van
+D305	STAT_ALARM_COUNT	Tổng số lần xuất hiện cảnh báo
+D306	STAT_ERROR_COUNT	Tổng số lần xảy ra lỗi
+D307	STAT_GATEWAY_LOSS_COUNT	Số lần mất kết nối Gateway
+D308	STAT_SENSOR_ERROR_COUNT	Số lần lỗi cảm biến
+D309	STAT_SYSTEM_RUNTIME_HOUR	Tổng số giờ hoạt động hệ thống
+
+
