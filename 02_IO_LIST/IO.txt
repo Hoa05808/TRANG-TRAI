@@ -132,6 +132,7 @@ M176	REMOTE_VALVE_OPEN - Yêu cầu mở van từ xa
 M177	REMOTE_VALVE_CLOSE - Yêu cầu đóng van từ xa
 M178	REMOTE_COMMAND_ACCEPTED - Lệnh từ xa được chấp nhận
 M179	REMOTE_COMMAND_REJECTED - Lệnh từ xa bị từ chối
+M180	REMOTE_MODE_REQUEST	Yêu cầu chuyển chế độ REMOTE
 
 Device	Comment	Ý nghĩa
 D0	SET_TEMP_FAN_ON	Nhiệt độ bật quạt (°C × 10)
