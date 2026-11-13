@@ -1,0 +1,50 @@
+
+1. PLC Mitsubishi FX3U-64MR/ES-A
+Ưu tiên chốt
+- 32 ngõ vào, 32 ngõ ra relay.
+- Đủ dư địa cho hệ thống hiện tại và một phần mở rộng.
+- Kiểm tra hàng chính hãng, tình trạng mới/cũ, tem và bảo hành.
+
+2. HMI 7 inch
+- Có thể chọn Wenweiw MT8071iP hoặc Mitsubishi GS2107.
+- Dùng để bật/tắt bơm, quạt, đèn, van; xem trạng thái và cảnh báo.
+- Phải xác nhận đúng driver/giao thức kết nối với CPU PLC.
+- Tham khảo JST và PLC Mitsubishi.
+
+3. Bộ nguồn 24VDC gắn DIN rail
+- Chọn Mean Well hoặc thương hiệu công nghiệp tương đương.
+- Dùng cho cảm biến, relay trung gian và thiết bị điều khiển 24V.
+- Chưa chốt công suất cho đến khi tính tổng dòng tải.
+- Nên tách nguồn điều khiển và nguồn tải nếu tải thực tế lớn.
+
+4. Gateway ESP32 + RS485
+- Ưu tiên loại có cách ly RS485.
+- Hỗ trợ Modbus RTU và Wi-Fi hoặc Ethernet.
+- Có thể tham khảo  hoặc .
+- Chưa cần mua router 4G ngay nếu chưa lắp đặt tại trang trại.
+
+5. Tủ điện và thiết bị bảo vệ
+- Tủ điện có ray DIN, máng đi dây, cầu đấu.
+- Aptomat tổng và aptomat nhánh.
+- Relay trung gian 24VDC.
+- Contactor, rơ-le nhiệt/bảo vệ động cơ phù hợp từng máy bơm và quạt.
+- Nút dừng khẩn cấp và mạch an toàn độc lập với PLC.
+
+6. Cảm biến
+- Nhiệt độ chuồng gà.
+- Độ ẩm không khí.
+- Nhiệt độ nước.
+- Mực nước thấp/cao.
+
+3. Nếu mua PLC cũ, ngân sách sẽ dễ chịu hơn
+Thiết bị	Dự trù
+PLC FX3U-64MR cũ	2,7–3,5 triệu
+Nguồn 24VDC Mean Well	0,45–0,55 triệu
+Cáp lập trình	0,25–0,5 triệu
+Relay trung gian và đế	0,5–0,8 triệu
+Tủ điện	0,8–1,2 triệu
+Aptomat và bảo vệ	0,5–0,8 triệu
+Nút nhấn, đèn báo	0,3–0,5 triệu
+Dây, cầu đấu, máng điện	0,6–0,9 triệu
+
+

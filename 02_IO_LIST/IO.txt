@@ -180,6 +180,18 @@ D57	10	10 ppm
 D58	1	Cảm biến nhiệt độ bình thường
 D59	1	Dữ liệu cảm biến hợp lệ
 
+Thanh ghi	Device Comment	Chức năng
+D60	TEMP_CONTROL_VALUE	Nhiệt độ dùng để điều khiển quạt
+D61	TEMP_FAN1_ON	Ngưỡng bật quạt 1
+D62	TEMP_FAN1_OFF	Ngưỡng tắt quạt 1
+D63	TEMP_FAN2_ON	Ngưỡng bật quạt 2
+D64	TEMP_FAN2_OFF	Ngưỡng tắt quạt 2
+D65	TEMP_SENSOR_VALID	Trạng thái dữ liệu nhiệt độ hợp lệ
+D66	FAN_AUTO_DELAY	Thời gian trễ điều khiển quạt
+D67	FAN_CONTROL_MODE	Chế độ điều khiển quạt
+D68	FAN1_RUNTIME	Thời gian hoạt động quạt 1
+D69	FAN2_RUNTIME	Thời gian hoạt động quạt 2
+
 Device	Comment	Quy ước
 D100	STATUS_PUMP_1	0 = Tắt, 1 = Bật
 D101	STATUS_FAN_1	0 = Tắt, 1 = Bật
