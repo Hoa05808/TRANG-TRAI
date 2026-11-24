@@ -1,4 +1,5 @@
 {
   "dart.flutterSdkPath": "C:\\flutter",
-  "dart.sdkPath": "C:\\flutter\\bin\\cache\\dart-sdk"
+  "dart.sdkPath": "C:\\flutter\\bin\\cache\\dart-sdk",
+  "cmake.sourceDirectory": "C:/Users/PC/Documents/GitHub/TRANG-TRAI/07_MOBILE_APP/farmcontrol_app/windows"
 }

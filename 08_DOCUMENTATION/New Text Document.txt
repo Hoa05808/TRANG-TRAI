@@ -1,0 +1,20 @@
+claud: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
+GROQ_API_KEY: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
+ khởi đoộng back an
+cd /d D:\fashion_ai_factory
+
+.venv\Scripts\python.exe -m uvicorn movie_factory_module.backend.main:app --reload --host 127.0.0.1 --port 8000
+
+giao diện
+cd /d D:\fashion_ai_factory
+
+.venv\Scripts\python.exe -m streamlit run movie_factory_module\dashboard.py
+
+cmd backend
+
+cd C:\Users\PC\Documents\GitHub\TRANG-TRAI\09_BACKEND\farmcontrol-backend
+.\mvnw.cmd spring-boot:run
+
+cmd giao diện 
+cd C:\Users\PC\Documents\GitHub\TRANG-TRAI\07_MOBILE_APP\farmcontrol_app
+C:\flutter\bin\flutter.bat run -d chrome
