@@ -1,0 +1,363 @@
+1. Kiến trúc tổng thể tôi đề xuất
+FLUTTER MOBILE APP
+
+Dart · Android · iOS
+
+Giám sát · Điều khiển · Cảnh báo · Lịch sử
+
+HTTPS / WebSocket
+
+BACKEND – JAVA SPRING BOOT
+
+REST API · Đăng nhập · Phân quyền · Xử lý lệnh
+
+Quản lý dữ liệu · Lịch sử · Cảnh báo
+
+MQTT
+
+MQTT BROKER + ESP32
+
+Nhận lệnh · Truyền dữ liệu · RS485
+
+RS485 / Modbus RTU
+
+MITSUBISHI FX3U
+
+Điều khiển tự động · Bảo vệ · Liên động
+
+
+BƠM · QUẠT · ĐÈN · VAN · CẢM BIẾN
+
+
+Đây là kiến trúc nên sử dụng lâu dài.
+
+Điểm quan trọng: Nếu mất Internet, PLC vẫn tự động điều khiển bơm, quạt và đèn theo chương trình hiện có. Không phụ thuộc vào điện thoại hay máy chủ.
+2. Công nghệ cần sử dụng
+Tôi đề xuất chốt bộ công nghệ sau:
+
+
+
+
+
+
+
+
+
+
+1. Flutter + Dart – Giao diện điện thoại
+Chọn sử dụng
+- Viết một bộ mã nguồn cho Android và iOS.
+- Giao diện hiện đại, có biểu đồ, nút điều khiển, trạng thái thiết bị.
+- Có thể tùy chỉnh thiết kế rất đẹp.
+
+
+
+
+
+
+
+
+
+
+
+
+
+2. Java 21 + Spring Boot – Backend
+Chọn sử dụng
+- Xử lý đăng nhập và phân quyền.
+- Nhận dữ liệu từ ESP32.
+- Quản lý lệnh điều khiển.
+- Lưu lịch sử, cảnh báo.
+- Cung cấp API cho Flutter.
+
+
+
+
+
+
+
+
+
+
+
+
+
+3. MySQL – Cơ sở dữ liệu
+
+Lưu tài khoản, thiết bị, thông số cảm biến, lịch sử hoạt động, lịch sử điều khiển và cảnh báo.
+
+
+
+
+
+
+
+
+
+
+
+
+
+4. MQTT Broker – Truyền thông
+
+Tôi đề xuất bắt đầu với Mosquitto. Khi hệ thống phát triển có thể cân nhắc EMQX.
+
+MQTT truyền lệnh và dữ liệu giữa Backend và ESP32.
+
+
+
+
+
+
+
+
+
+
+
+
+
+5. ESP32 – Gateway
+- Ngôn ngữ C/C++.
+- PlatformIO hoặc Arduino framework để bắt đầu.
+- Giao tiếp RS485 với PLC.
+- Kết nối MQTT qua Wi-Fi hoặc mạng Internet.
+
+
+
+
+
+
+
+
+
+
+
+
+
+6. Firebase Cloud Messaging – Thông báo
+
+Gửi thông báo đẩy về Android và iPhone khi có cảnh báo từ trang trại.
+
+
+
+Ngoài ra, có hai công nghệ bổ trợ:
+- Node-RED: Dùng để thử nghiệm luồng dữ liệu, kiểm tra MQTT và giám sát. Không bắt buộc phải dùng trong sản phẩm cuối.
+- React: Chưa cần sử dụng ở giai đoạn đầu. Nếu sau này muốn có trang quản trị trên máy tính, chúng ta có thể xây dựng thêm bằng React và TypeScript.
+Tôi chọn Java Spring Boot làm backend vì bạn đã có nền tảng Java và môi trường IntelliJ, Java 21, MySQL 8.0.46. Như vậy không phải học lại backend bằng một ngôn ngữ khác. 
+3. Giao diện Flutter nên thiết kế như thế nào?
+Tôi muốn ứng dụng có phong cách giống một hệ thống SCADA công nghiệp hiện đại, chứ không phải giao diện IoT đơn giản chỉ có vài nút bật/tắt.
+
+Dự kiến có 7 màn hình:
+
+
+
+
+
+
+
+
+
+
+01. Dashboard
+
+Tổng quan trang trại, nhiệt độ, độ ẩm, trạng thái thiết bị.
+
+
+
+
+
+
+
+
+
+
+
+02. Điều khiển
+
+Bơm, quạt, đèn, van và các chế độ vận hành.
+
+
+
+
+
+
+
+
+
+
+
+03. Cảm biến
+
+Theo dõi dữ liệu cảm biến theo thời gian thực.
+
+
+
+
+
+
+
+
+
+
+
+04. Biểu đồ
+
+Biểu đồ nhiệt độ, độ ẩm và hoạt động thiết bị.
+
+
+
+
+
+
+
+
+
+
+
+05. Cảnh báo
+
+Lỗi PLC, mất kết nối, nhiệt độ cao, mực nước thấp.
+
+
+
+
+
+
+
+
+
+
+
+06. Lịch sử
+
+Ai điều khiển, thiết bị nào chạy, thời gian và kết quả.
+
+
+
+
+
+
+
+
+
+
+
+07. Cài đặt
+
+Tài khoản, phân quyền, thông số và cấu hình kết nối.
+
+
+Tôi đề xuất thiết kế theo phong cách:
+- Nền xanh đen hoặc trắng tùy chế độ sáng/tối.
+- Màu xanh lá: thiết bị đang chạy.
+- Màu xám: thiết bị đang tắt.
+- Màu vàng: cảnh báo.
+- Màu đỏ: lỗi nghiêm trọng.
+- Biểu đồ có thể xem theo ngày, tuần và tháng.
+4. Xem lại file: những phần nào cần sửa?
+File của bạn đã có kiến trúc hợp lý và chia thành 6 giai đoạn: PLC, cảm biến, tự động hóa, ESP32, Cloud và ứng dụng điện thoại. Cac bước TDH.txt
+ Cac bước TDH.txt
+
+
+Tôi không đề xuất viết lại toàn bộ. Chỉ cần cập nhật những điểm sau:
+Nội dung trong file	Đề xuất cập nhật
+Dashboard trên điện thoại rồi mới Flutter	Bỏ bước trung gian, làm Flutter ngay
+MQTT và Node-RED	Giữ MQTT; Node-RED là tùy chọn
+Telegram Bot	Có thể giữ làm kênh cảnh báo phụ, thêm FCM
+Chưa có Backend riêng	Bổ sung Java Spring Boot
+Chưa có cơ sở dữ liệu rõ ràng	Bổ sung MySQL
+Chưa có phân quyền người dùng	Bổ sung đăng nhập và phân quyền
+Chưa có quản lý lệnh	Bổ sung trạng thái lệnh gửi, nhận, thực hiện, thất bại
+
+File ban đầu cũng đã nêu các cảnh báo quan trọng như bơm chạy quá thời gian, quạt không phản hồi và mất kết nối PLC–Gateway. Chúng ta nên giữ các yêu cầu này. Cac bước TDH.txt
+
+5. Những điểm kỹ thuật cần bổ sung trước khi triển khai thực tế
+Có 5 điểm tôi muốn điều chỉnh để dự án không gặp vấn đề khi đưa ra trang trại.
+
+Thứ nhất – Xác nhận trạng thái thiết bị thực tế
+
+Hiện tại D100, D101, D102 đang lấy trạng thái từ Y0, Y1, Y2. Đây là trạng thái ngõ ra PLC, chưa chứng minh động cơ bơm hoặc quạt thực sự chạy.
+
+Khi mua phần cứng, nên bổ sung tiếp điểm phụ contactor hoặc cảm biến phản hồi để xác nhận thiết bị thực sự hoạt động.
+
+Thứ hai – Giao thức PLC và ESP32
+
+Cần xác định chính xác module RS485, cách đấu dây, tốc độ truyền và giao thức. Modbus RTU là phương án đề xuất trong file, nhưng phải xác minh FX3U và module giao tiếp được chọn hỗ trợ cấu hình đó. Cac bước TDH.txt
+
+
+Thứ ba – Bảo mật
+- Đăng nhập bằng tài khoản.
+- Phân quyền chủ trang trại và người vận hành.
+- Không mở trực tiếp PLC ra Internet.
+- Giao tiếp MQTT có xác thực và mã hóa TLS.
+- Lưu lại người gửi lệnh và kết quả thực hiện.
+Thứ tư – Xử lý mất mạng
+
+Khi mất Internet:
+- PLC tiếp tục AUTO.
+- Điện thoại hiển thị mất kết nối.
+- Không giả định thiết bị đang chạy chỉ vì chưa nhận được dữ liệu mới.
+- Lệnh cũ không được tự động thực hiện lại khi kết nối phục hồi.
+Thứ năm – Sửa giao thức xử lý lệnh PLC
+
+Đây là điểm cần xử lý trước khi hoàn thiện phần REMOTE COMMAND HANDLER hiện tại.
+
+Logic D203 khác D210 đang làm có một vấn đề: nếu Gateway gửi K1, sau đó đưa D203 về K0 rồi lại gửi K1, nhưng D210 vẫn giữ K1, PLC sẽ không nhận lần K1 tiếp theo.
+
+Vì vậy, trước khi tiếp tục M188 và các mạng điều khiển, chúng ta cần hoàn thiện quy trình xác nhận, xóa lệnh và cho phép gửi lại cùng một mã lệnh. Không nên chuyển nguyên logic hiện tại sang phần mềm mà chưa sửa.
+
+6. Lộ trình mới của dự án
+Tôi đề xuất tổ chức lại thành 8 giai đoạn:
+1. Đang gần hoàn thành
+   Giai đoạn 1 – PLC
+   
+   Hoàn thiện Ladder, kiểm tra AUTO/MANUAL/REMOTE, xử lý lệnh từ xa và trạng thái thiết bị.
+2. Giai đoạn 2 – ESP32 và RS485
+   
+   Viết chương trình Gateway, trao đổi dữ liệu PLC.
+3. Giai đoạn 3 – Backend Spring Boot
+   
+   Tạo API, đăng nhập, phân quyền, MySQL và quản lý thiết bị.
+4. Giai đoạn 4 – MQTT và Cloud
+   
+   Kết nối Gateway, Backend và xử lý dữ liệu thời gian thực.
+5. Giai đoạn 5 – Flutter
+   
+   Xây dựng 7 màn hình ứng dụng Android và iOS.
+6. Giai đoạn 6 – Cảnh báo
+   
+   FCM, lịch sử sự kiện, cảnh báo lỗi và mất kết nối.
+7. Giai đoạn 7 – Tích hợp
+   
+   Kết nối toàn bộ hệ thống, thử nghiệm bằng dữ liệu mô phỏng trước.
+8. Giai đoạn 8 – Phần cứng thực tế
+   
+   Lắp PLC, cảm biến, contactor, ESP32, RS485 và chạy thử trang trại.
+7. Máy tính hiện tại cần cài những gì?
+Theo môi trường Windows 11 và các công cụ bạn đã có, danh sách dự kiến:
+Phần mềm	Mục đích
+IntelliJ IDEA	Java Spring Boot
+JDK 21	Chạy Backend
+MySQL 8.0	Cơ sở dữ liệu
+Postman	Kiểm tra API
+Flutter SDK	Phát triển ứng dụng
+Android Studio	Android SDK và Emulator
+Visual Studio Code	Có thể dùng viết Flutter
+Git	Quản lý mã nguồn
+Docker Desktop	Chạy MQTT Broker và dịch vụ khi cần
+PlatformIO	Phát triển ESP32
+
+Bạn không cần cài tất cả cùng lúc. Chúng ta sẽ cài theo từng giai đoạn để tránh lỗi môi trường và tốn dung lượng ổ đĩa.
+
+8. Chốt kiến trúc phần mềm
+FarmControl
+Kiến trúc công nghệ đề xuất
+Thành phần	Công nghệ
+Mobile	Flutter / Dart
+Backend	Java 21 / Spring Boot
+Database	MySQL 8
+Realtime	MQTT
+Broker	Mosquitto
+Gateway	ESP32 / C++
+PLC	Mitsubishi FX3U
+Notifications	Firebase Cloud Messaging

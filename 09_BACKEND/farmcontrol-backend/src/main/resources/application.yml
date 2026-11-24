@@ -1,0 +1,78 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: farmcontrol-backend
+  config:
+    # Mật khẩu cục bộ đặt cạnh pom.xml, KHÔNG commit (đã có trong .gitignore):
+    #   local.yml      : mật khẩu MySQL, token Telegram... (bạn tự sửa)
+    #   local-mqtt.yml : tài khoản MQTT (sinh bởi 05_IOT_MQTT/setup-mosquitto.ps1)
+    import: optional:file:./local.yml,optional:file:./local-mqtt.yml
+  datasource:
+    # CSDL tạo bằng file 08_DOCUMENTATION/FARM_AUTOMATION_mysql.sql (chạy file đó trước)
+    url: ${DB_URL:jdbc:mysql://localhost:3306/FARM_AUTOMATION?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}   # đặt trong local.yml (không commit)
+  jpa:
+    open-in-view: false
+    hibernate:
+      # Chỉ kiểm tra bảng khớp entity; KHÔNG tự tạo/sửa bảng
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+farm:
+  farm-id: ${FARM_ID:farm01}
+
+  security:
+    # Khóa ký JWT: tối thiểu 32 ký tự. BẮT BUỘC đổi khi chạy thật (biến môi trường JWT_SECRET).
+    jwt-secret: ${JWT_SECRET:dev-only-secret-change-me-0123456789abcdef}
+    access-token-minutes: 30
+    refresh-token-days: 30
+    # Tài khoản chủ trang trại tạo lần đầu (chỉ khi bảng người dùng còn trống).
+    # Nếu để trống mật khẩu, hệ thống tự sinh và in ra log một lần.
+    bootstrap-owner-username: ${OWNER_USERNAME:owner}
+    bootstrap-owner-password: ${OWNER_PASSWORD:}
+
+  gateway:
+    # mqtt      : kết nối MQTT broker thật (ESP32 thật)
+    # simulator : giả lập ESP32 + PLC ngay trong backend (dùng khi phát triển Flutter)
+    # none      : không kết nối gì (dùng cho test)
+    mode: ${GATEWAY_MODE:simulator}
+    # Lệnh hết hạn sau N giây: ESP32 phải bỏ lệnh nếu nhận trễ hơn thời điểm này
+    command-ttl-seconds: 10
+    # Không nhận phản hồi sau N giây => TIMEOUT (KHÔNG tự gửi lại)
+    command-ack-timeout-seconds: 15
+    # Thời gian chờ telemetry xác nhận thiết bị đổi trạng thái sau khi PLC báo đã thực hiện
+    command-confirm-window-seconds: 30
+
+  mqtt:
+    # Dùng ssl://host:8883 khi chạy thật (TLS)
+    url: ${MQTT_URL:tcp://localhost:1883}
+    client-id: ${MQTT_CLIENT_ID:farmcontrol-backend}
+    username: ${MQTT_USERNAME:}
+    password: ${MQTT_PASSWORD:}
+
+  telemetry:
+    # Lưu mẫu cảm biến vào MySQL mỗi N giây (dữ liệu realtime vẫn đẩy liên tục qua WebSocket)
+    store-interval-seconds: 60
+
+  notifications:
+    telegram:
+      # Tạo bot với @BotFather, lấy token; chat-id là id nhóm/người nhận. Để trống = tắt Telegram.
+      # KHÔNG ghi token vào file này; đặt bằng biến môi trường.
+      bot-token: ${TELEGRAM_BOT_TOKEN:}
+      chat-id: ${TELEGRAM_CHAT_ID:}
+      # Chỉ gửi Telegram từ mức này trở lên: WARNING hoặc CRITICAL
+      min-severity: ${TELEGRAM_MIN_SEVERITY:WARNING}
+    fcm:
+      # Đường dẫn file khóa tài khoản dịch vụ Firebase (JSON). Để trống = tắt FCM.
+      # Lưu file NGOÀI thư mục git, ví dụ C:\farm-secrets\firebase-admin.json
+      credentials-file: ${FIREBASE_CREDENTIALS:}
+
+logging:
+  level:
+    vn.farmcontrol: INFO

@@ -1,0 +1,30 @@
+name: farmcontrol_app
+description: "FarmControl - giám sát và điều khiển trang trại (PLC FX3U - ESP32 - Spring Boot)"
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  firebase_core: ^5.2.0
+  firebase_messaging: ^17.1.0
+  fl_chart: ^1.3.1
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_secure_storage: ^11.2.0
+  http: ^1.6.0
+  intl: ^0.20.3
+  provider: ^6.1.5+1
+  shared_preferences: ^2.5.6
+  stomp_dart_client: ^3.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

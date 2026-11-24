@@ -1,0 +1,16 @@
+target/
+.idea/
+*.iml
+*.log
+.env
+
+# Khóa Firebase tài khoản dịch vụ: không bao giờ commit
+*firebase-adminsdk*.json
+firebase-admin*.json
+
+# Cấu hình Run của IntelliJ có thể chứa token (TELEGRAM_BOT_TOKEN...): không commit
+.run/
+
+# Cấu hình cục bộ chứa mật khẩu (MQTT, Telegram...): không commit
+local.yml
+local-*.yml

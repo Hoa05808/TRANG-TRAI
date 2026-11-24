@@ -1,0 +1,5 @@
+.pio/
+.vscode/.browse*
+# Mật khẩu Wi-Fi / MQTT: không commit
+include/mqtt_secrets.h
+include/wifi_secrets.h
