@@ -89,7 +89,7 @@ class Dashboard {
   final String gatewayMode;
   final SensorValues? sensors;
   final List<DeviceView> devices;
-  final String mode; // STOP AUTO MANUAL UNKNOWN
+  final String mode; // STOP AUTO MANUAL REMOTE UNKNOWN
   final String plcState; // STOP RUN ERROR UNKNOWN
   final int errorCode, alarmCode, plcUptime;
   final bool remoteEnabled;
@@ -123,6 +123,7 @@ class Dashboard {
   String get modeLabel => switch (mode) {
         'AUTO' => 'TỰ ĐỘNG',
         'MANUAL' => 'THỦ CÔNG',
+        'REMOTE' => 'TỪ XA',
         'STOP' => 'DỪNG',
         _ => 'KHÔNG RÕ',
       };

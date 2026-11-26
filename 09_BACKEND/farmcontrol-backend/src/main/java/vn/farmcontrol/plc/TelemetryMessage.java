@@ -41,7 +41,8 @@ public record TelemetryMessage(String gw, Long seq, int[] d50, int[] d100, int[]
     public int plcState() { return d100[6]; }
     public int errorCode() { return d100[7]; }
     public int alarmCode() { return d100[8]; }
-    public int uptime() { return d100[9]; }
+    /** D109 = số phút PLC đã chạy từ lúc cấp điện; trả về giây cho app. */
+    public int uptime() { return d100[9] * 60; }
 
     // --- D200..D209 ---
     public int dataVersion() { return d200[0]; }

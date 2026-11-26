@@ -6,6 +6,8 @@ X3	WATER_LOW - Cảm biến mức nước thấp
 X4	WATER_HIGH - Cảm biến mức nước cao
 X5	DOOR_SENSOR - Cảm biến cửa
 X6	AUTO_MANUAL - Công tắc Auto/Manual
+X7	REMOTE_KEY - Công tắc khóa LOCAL/REMOTE (ON = cho phép điều khiển từ app) [MỚI 26/11]
+Ghi chú: X1 STOP và X2 EMERGENCY đấu thường đóng (ON = bình thường). X3 ON = nước thấp, X4 ON = bồn đầy. X5 ON = cửa MỞ.
 
 Device	Comment
 Y0	PUMP_1 - Điều khiển máy bơm nước
@@ -257,5 +259,40 @@ D306	STAT_ERROR_COUNT	Tổng số lần xảy ra lỗi
 D307	STAT_GATEWAY_LOSS_COUNT	Số lần mất kết nối Gateway
 D308	STAT_SENSOR_ERROR_COUNT	Số lần lỗi cảm biến
 D309	STAT_SYSTEM_RUNTIME_HOUR	Tổng số giờ hoạt động hệ thống
+
+==== BỔ SUNG 26/11/2026 (chương trình MAIN_FIXED) ====
+Bit HMI (nút nhấn nhả, PLC tự xóa M30/M31/M37)
+M30	HMI_PUMP_START - Nút bật bơm (MANUAL)
+M31	HMI_PUMP_STOP - Nút tắt bơm (MANUAL)
+M32	HMI_FAN1_START   M33	HMI_FAN1_STOP   M34	HMI_FAN2_START   M35	HMI_FAN2_STOP
+M36	REMOTE_PUMP_LATCH - Tự giữ lệnh bật bơm từ xa
+M37	HMI_BUZZER_SILENCE - Nút tắt còi
+M38	BUZZER_SILENCED - Còi đã tắt (tự xóa khi có cảnh báo mới)
+M56	HMI_LIGHT_ON   M57	HMI_LIGHT_OFF
+M70..M73	Mùa theo tháng (2-4, 5-7, 8-10, 11-1)
+M74..M77	Giờ bật đèn của từng mùa, M78 = đến giờ bật đèn
+M181	Có yêu cầu mới (D210 ≠ D205)   M182	Yêu cầu hợp lệ   M183	Bị liên động chặn   M188	Lệnh được chấp nhận (1 chu kỳ)
+
+Timer (100 ms)
+T0	Bơm chạy quá giờ, đặt = D4 × 10 (D70)
+T2	Gateway im lặng 30 s (D202 không đổi) -> M105
+T3	Trễ cảnh báo nhiệt độ cao (D72 = D5 × 10)
+T4	Trễ cảnh báo nước thấp mà bơm không chạy
+T5	Trễ cảnh báo cửa mở
+
+Thanh ghi
+D70/D71	Đặt T0 (D4 × 10, kết quả 32 bit)
+D72/D73	Đặt T3..T5 (D5 × 10, kết quả 32 bit)
+D109	Thời gian PLC chạy từ lúc cấp điện (PHÚT)
+D211	Giá trị D202 lần trước (để phát hiện Gateway im lặng)
+D311	Bộ đếm phút để cộng D309
+
+Quy ước mới (khớp backend)
+D105	0 = Stop, 1 = Auto, 2 = Manual, 3 = Remote
+D106	0 = Stop (chưa nhấn START), 1 = Run, 2 = Error (lỗi hoặc dừng khẩn)
+D107	0 = không lỗi, 1 = cảm biến mực nước mâu thuẫn, 2 = dừng khẩn
+D108	0 = không, 3 = bơm quá giờ, 4 = nhiệt độ cao, 5 = nước thấp mà bơm không chạy, 6 = cửa mở (mã cao nhất thắng)
+D209	PLC ghi: 1 khi REMOTE (X7) và Gateway còn kết nối và không dừng khẩn
+D0..D9	Nếu = 0 khi khởi động thì PLC nạp giá trị mẫu. NÊN đặt vùng giữ (latch) D0..D99 trong PLC Parameter.
 
 

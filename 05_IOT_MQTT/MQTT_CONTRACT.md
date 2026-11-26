@@ -28,7 +28,7 @@ ESP32 đọc 3 khối thanh ghi liên tiếp bằng Modbus (mỗi khối 10 than
 |---|---|---|---|
 | d50 | 0–9 | D50–D59 | Nhiệt độ chuồng, độ ẩm, nhiệt độ nước, mực nước, độ ẩm đất, ánh sáng, CO₂, NH₃, trạng thái cảm biến nhiệt (1 = OK), dữ liệu hợp lệ (1 = OK) |
 | d100 | 0–4 | D100–D104 | Bơm, quạt 1, quạt 2, đèn, van (0/1) |
-| d100 | 5–9 | D105–D109 | Chế độ (0 Stop/1 Auto/2 Manual), trạng thái PLC (0 Stop/1 Run/2 Error), mã lỗi, mã cảnh báo, uptime |
+| d100 | 5–9 | D105–D109 | Chế độ (0 Stop/1 Auto/2 Manual/3 Remote), trạng thái PLC (0 Stop/1 Run/2 Error), mã lỗi D107, mã cảnh báo D108, uptime D109 (**phút**) |
 | d200 | 0–9 | D200–D209 | Phiên bản, **heartbeat PLC (D201)**, heartbeat gateway, D203…D208, **cho phép REMOTE (D209)** |
 
 - Backend coi **mất kết nối Gateway** khi không nhận telemetry quá 30 giây.

@@ -6,6 +6,7 @@ import java.util.Locale;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import vn.farmcontrol.plc.Device;
+import vn.farmcontrol.plc.PlcEnums;
 import vn.farmcontrol.plc.PlcEnums.PlcState;
 import vn.farmcontrol.setting.SettingKey;
 import vn.farmcontrol.setting.SettingsService;
@@ -51,13 +52,14 @@ public class AlertEvaluator {
 
         // Mã lỗi / cảnh báo từ PLC
         if (snap.plcState() == PlcState.ERROR || snap.errorCode() != 0) {
-            alerts.raise(AlertType.PLC_ERROR, "PLC báo lỗi, mã lỗi D107 = " + snap.errorCode()
-                    + (snap.plcState() == PlcState.ERROR ? " (PLC ở trạng thái ERROR)" : ""), (double) snap.errorCode());
+            alerts.raise(AlertType.PLC_ERROR, "PLC báo lỗi: " + PlcEnums.errorText(snap.errorCode())
+                    + " (D107 = " + snap.errorCode() + ")", (double) snap.errorCode());
         } else {
             alerts.resolve(AlertType.PLC_ERROR);
         }
         if (snap.alarmCode() != 0) {
-            alerts.raise(AlertType.PLC_ALARM, "PLC báo cảnh báo, mã D108 = " + snap.alarmCode(), (double) snap.alarmCode());
+            alerts.raise(AlertType.PLC_ALARM, "PLC cảnh báo: " + PlcEnums.alarmText(snap.alarmCode())
+                    + " (D108 = " + snap.alarmCode() + ")", (double) snap.alarmCode());
         } else {
             alerts.resolve(AlertType.PLC_ALARM);
         }

@@ -1,5 +1,4 @@
-claud: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
-GROQ_API_KEY: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
+
  khởi đoộng back an
 cd /d D:\fashion_ai_factory
 

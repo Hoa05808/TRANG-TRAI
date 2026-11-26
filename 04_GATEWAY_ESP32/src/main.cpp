@@ -197,6 +197,20 @@ void readAndPublishTelemetry() {
 // ---------- Lệnh: bắt tay reqId với PLC ----------
 void processCommand() {
     if (command.state == Command::PENDING) {
+        // reqId trùng D205 (ví dụ CSDL backend bị tạo lại, reqId đếm lại từ 1): PLC sẽ coi là lệnh cũ
+        // và ESP32 sẽ đọc nhầm kết quả cũ trong D206 -> từ chối, không ghi xuống PLC.
+        uint8_t r = plc.readHoldingRegisters(reg(REG_ACK_REQ), 1);
+        if (r != plc.ku8MBSuccess) {
+            lastModbusError = r;
+            sendAck(command.reqId, command.cmd, ACK_COMM_ERROR, modbusErrorText(lastModbusError).c_str());
+            command.state = Command::IDLE;
+            return;
+        }
+        if ((int)plc.getResponseBuffer(0) == command.reqId) {
+            sendAck(command.reqId, command.cmd, ACK_REJECTED, "reqId trùng lệnh PLC vừa xử lý (D205), gửi lại lệnh mới");
+            command.state = Command::IDLE;
+            return;
+        }
         // Ghi D203 (mã lệnh), D204 (giá trị) TRƯỚC, D210 (reqId) SAU CÙNG: PLC thấy D210 đổi mới xử lý
         plc.setTransmitBuffer(0, command.cmd);
         plc.setTransmitBuffer(1, command.val);

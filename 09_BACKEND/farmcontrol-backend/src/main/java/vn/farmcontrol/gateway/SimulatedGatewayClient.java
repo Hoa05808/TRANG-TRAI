@@ -121,7 +121,7 @@ public class SimulatedGatewayClient implements GatewayClient, SmartLifecycle {
         d100[6] = fault == Fault.PLC_ERROR ? 2 : 1;
         d100[7] = fault == Fault.PLC_ERROR ? 133 : 0;
         d100[8] = 0;
-        d100[9] = uptime;
+        d100[9] = uptime / 60; // D109 tính bằng phút, giống PLC
         int[] d200 = {1, heartbeat, gatewayHeartbeat, lastCmd, 0, lastAckReq, lastResult,
                 fault == Fault.PLC_LINK_LOST ? 1 : 0, (int) (seq & 0x7FFF), 1};
 

@@ -1,0 +1,51 @@
+# ===== File bí mật: KHÔNG commit =====
+# Biến môi trường, khóa API, mật khẩu
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.jks
+*.keystore
+secrets/
+*secret*.txt
+*api_key*
+*apikey*
+
+# Backend Spring Boot: mật khẩu MySQL
+local.yml
+application-local.yml
+
+# ESP32: Wi-Fi / MQTT (chỉ commit file *.example.h)
+04_GATEWAY_ESP32/include/wifi_secrets.h
+04_GATEWAY_ESP32/include/mqtt_secrets.h
+
+# MQTT: mật khẩu sinh bởi setup-mosquitto.ps1
+local-credentials.json
+passwd
+*.passwd
+
+# Firebase: khóa app và khóa service account
+google-services.json
+GoogleService-Info.plist
+firebase-admin*.json
+*serviceAccount*.json
+
+# Ghi chú lệnh cá nhân (từng chứa key)
+08_DOCUMENTATION/cmd.txt
+
+# ===== File tạm / build =====
+# GX Works2 sinh file khóa và sao lưu khi đang mở dự án
+*.gxw.bak
+*.lck
+~$*
+
+.pio/
+target/
+build/
+.dart_tool/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
