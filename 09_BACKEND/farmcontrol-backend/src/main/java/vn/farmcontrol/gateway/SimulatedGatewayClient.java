@@ -53,6 +53,7 @@ public class SimulatedGatewayClient implements GatewayClient, SmartLifecycle {
     private int lastCmd;
     private int lastAckReq;
     private int lastResult;
+    private int fishFeeds, duckFeeds, chickenFeeds;
     private volatile Fault fault = Fault.NONE;
     private volatile boolean running;
 
@@ -116,7 +117,19 @@ public class SimulatedGatewayClient implements GatewayClient, SmartLifecycle {
                 (int) Math.round(reportedLevel * 10), 550, 1200 + (int) noise(40), 800 + (int) noise(20),
                 10, fault == Fault.SENSOR_FAULT ? 0 : 1, fault == Fault.SENSOR_FAULT ? 0 : 1};
         int[] d100 = new int[10];
-        for (Device d : Device.values()) d100[d.statusIndex()] = outputs.get(d) ? 1 : 0;
+        int[] d110 = new int[10];
+        for (Device d : Device.values()) {
+            int i = d.statusIndex();
+            if (i < 10) d100[i] = outputs.get(d) ? 1 : 0;
+            else d110[i - 10] = outputs.get(d) ? 1 : 0;
+        }
+        java.time.LocalTime now0 = java.time.LocalTime.now(java.time.ZoneId.of("Asia/Ho_Chi_Minh"));
+        d110[4] = 0;              // thùng thức ăn: còn đủ
+        d110[5] = fishFeeds;      // số lần cho ăn hôm nay
+        d110[6] = duckFeeds;
+        d110[7] = chickenFeeds;
+        d110[8] = 1;              // cho phép cho ăn
+        d110[9] = now0.getHour() * 100 + now0.getMinute();
         d100[5] = 1; // AUTO
         d100[6] = fault == Fault.PLC_ERROR ? 2 : 1;
         d100[7] = fault == Fault.PLC_ERROR ? 133 : 0;
@@ -126,7 +139,7 @@ public class SimulatedGatewayClient implements GatewayClient, SmartLifecycle {
                 fault == Fault.PLC_LINK_LOST ? 1 : 0, (int) (seq & 0x7FFF), 1};
 
         events.publishEvent(new TelemetryReceived(
-                new TelemetryMessage("simulator", ++seq, d50, d100, d200), Instant.now()));
+                new TelemetryMessage("simulator", ++seq, d50, d100, d110, d200), Instant.now()));
     }
 
     private void autoSet(Device d, long now, boolean onCondition, boolean offCondition) {
@@ -164,9 +177,32 @@ public class SimulatedGatewayClient implements GatewayClient, SmartLifecycle {
                     outputs.put(e.getKey(), e.getValue());
                     remoteOverrideUntil.put(e.getKey(), until);
                 }
+                simulateFeedCycle(type);
                 ack(cmd, 3, null);
             }, 600, TimeUnit.MILLISECONDS);
         }, 300, TimeUnit.MILLISECONDS);
+    }
+
+    /** Giống PLC: cho ăn chạy theo thời gian rồi tự tắt (rút ngắn còn ~20 s để thử app). */
+    private void simulateFeedCycle(CommandType type) {
+        switch (type) {
+            case FEED_FISH_START -> {
+                fishFeeds++;
+                executor.schedule(() -> outputs.put(Device.FISH_VALVE, true), 3, TimeUnit.SECONDS);
+                executor.schedule(() -> outputs.put(Device.FISH_VALVE, false), 15, TimeUnit.SECONDS);
+                executor.schedule(() -> outputs.put(Device.FISH_FEEDER, false), 20, TimeUnit.SECONDS);
+            }
+            case FEED_DUCK_START -> {
+                duckFeeds++;
+                executor.schedule(() -> outputs.put(Device.DUCK_VALVE, false), 15, TimeUnit.SECONDS);
+            }
+            case VALVE_OPEN -> executor.schedule(() -> outputs.put(Device.VALVE_1, false), 15, TimeUnit.SECONDS);
+            case FEED_CHICKEN_START -> {
+                chickenFeeds++;
+                executor.schedule(() -> outputs.put(Device.CHICKEN_VALVE, false), 15, TimeUnit.SECONDS);
+            }
+            default -> { }
+        }
     }
 
     private void ack(CommandMessage cmd, int result, String msg) {

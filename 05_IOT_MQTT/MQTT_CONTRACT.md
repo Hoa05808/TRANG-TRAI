@@ -20,15 +20,20 @@ ESP32 đọc 3 khối thanh ghi liên tiếp bằng Modbus (mỗi khối 10 than
   "seq": 1234,
   "d50":  [325, 750, 285, 650, 550, 1200, 800, 10, 1, 1],
   "d100": [1, 0, 0, 1, 0, 1, 1, 0, 0, 3600],
+  "d110": [0, 0, 0, 0, 0, 1, 1, 2, 1, 705],
   "d200": [1, 45, 12, 0, 0, 0, 0, 0, 0, 1]
 }
 ```
+
+Khối `d110` (cho ăn) không bắt buộc: firmware cũ không gửi thì backend bỏ qua phần cho ăn.
 
 | Khối | Vị trí | Thanh ghi | Ý nghĩa |
 |---|---|---|---|
 | d50 | 0–9 | D50–D59 | Nhiệt độ chuồng, độ ẩm, nhiệt độ nước, mực nước, độ ẩm đất, ánh sáng, CO₂, NH₃, trạng thái cảm biến nhiệt (1 = OK), dữ liệu hợp lệ (1 = OK) |
 | d100 | 0–4 | D100–D104 | Bơm, quạt 1, quạt 2, đèn, van (0/1) |
 | d100 | 5–9 | D105–D109 | Chế độ (0 Stop/1 Auto/2 Manual/3 Remote), trạng thái PLC (0 Stop/1 Run/2 Error), mã lỗi D107, mã cảnh báo D108, uptime D109 (**phút**) |
+| d110 | 0–3 | D110–D113 | Máy cho cá ăn Y10, van thức ăn cá Y11, van vịt Y12, van gà Y13 (0/1) |
+| d110 | 4–9 | D114–D119 | Thùng sắp hết (bit 1 cá, 2 vịt, 4 gà), số lần cho ăn hôm nay cá/vịt/gà, cho phép cho ăn (1), giờ PLC HHMM |
 | d200 | 0–9 | D200–D209 | Phiên bản, **heartbeat PLC (D201)**, heartbeat gateway, D203…D208, **cho phép REMOTE (D209)** |
 
 - Backend coi **mất kết nối Gateway** khi không nhận telemetry quá 30 giây.
@@ -47,7 +52,7 @@ ESP32 đọc 3 khối thanh ghi liên tiếp bằng Modbus (mỗi khối 10 than
 ```
 
 - `reqId`: 1–32767, **mỗi lệnh một số khác nhau** (kể cả khi gửi lại cùng một `cmd`).
-- `cmd`: mã lệnh D203 (1 Bật bơm, 2 Tắt bơm, 3 Bật quạt, 4 Tắt quạt, 5 Bật đèn, 6 Tắt đèn, 7 Mở van, 8 Đóng van).
+- `cmd`: mã lệnh D203 (1 Bật bơm, 2 Tắt bơm, 3 Bật quạt, 4 Tắt quạt, 5 Bật đèn, 6 Tắt đèn, 7 Mở van, 8 Đóng van, 9 Cho cá ăn, 10 Dừng cho cá ăn, 11 Cho vịt ăn, 12 Dừng cho vịt ăn, 13 Cho gà ăn, 14 Dừng cho gà ăn).
 - `exp`: epoch giây. **ESP32 phải bỏ lệnh nếu giờ hiện tại > exp** và gửi ack `result = 10`. ESP32 cần đồng bộ giờ bằng NTP.
 - Backend chỉ gửi một lệnh tại một thời điểm, và không bao giờ tự gửi lại lệnh khi mất kết nối.
 

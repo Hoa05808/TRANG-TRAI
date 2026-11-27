@@ -82,7 +82,7 @@ class _EventTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = e.turnedOn ? Scada.running : Scada.off;
-    final verb = e.device == 'VALVE_1' ? (e.turnedOn ? 'MỞ' : 'ĐÓNG') : (e.turnedOn ? 'BẬT' : 'TẮT');
+    final verb = isValveId(e.device) ? (e.turnedOn ? 'MỞ' : 'ĐÓNG') : (e.turnedOn ? 'BẬT' : 'TẮT');
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(

@@ -69,7 +69,7 @@ class WebSocketIntegrationTest {
         int[] d50 = {301, 700, 280, 500, 500, 1000, 700, 5, 1, 1};
         int[] d100 = {0, 1, 0, 1, 0, 1, 1, 0, 0, 100};
         int[] d200 = {1, 7, 1, 0, 0, 0, 0, 0, 0, 1};
-        events.publishEvent(new TelemetryReceived(new TelemetryMessage("gw", 1L, d50, d100, d200), Instant.now()));
+        events.publishEvent(new TelemetryReceived(new TelemetryMessage("gw", 1L, d50, d100, null, d200), Instant.now()));
 
         Map<?, ?> dash = received.poll(5, TimeUnit.SECONDS);
         assertThat(dash).isNotNull();

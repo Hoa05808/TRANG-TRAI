@@ -65,6 +65,23 @@ public class AlertEvaluator {
         }
 
         evaluatePump(snap);
+        evaluateFeed(snap);
+    }
+
+    /** Cảm biến thùng thức ăn (D114, PLC đã lọc trễ 30 s). */
+    private void evaluateFeed(FarmSnapshot snap) {
+        FarmSnapshot.FeedStatus f = snap.feed();
+        if (f == null) return; // Gateway chưa gửi khối d110
+        if (!f.anyLow()) {
+            alerts.resolve(AlertType.FEED_LOW);
+            return;
+        }
+        java.util.List<String> low = new java.util.ArrayList<>();
+        if (f.fishLow()) low.add("cá");
+        if (f.duckLow()) low.add("vịt");
+        if (f.chickenLow()) low.add("gà");
+        alerts.raise(AlertType.FEED_LOW, "Thùng thức ăn " + String.join(", ", low)
+                + " sắp hết. Đổ thêm thức ăn trước lần cho ăn tiếp theo.", (double) low.size());
     }
 
     private void evaluateThresholds(FarmSnapshot snap) {

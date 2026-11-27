@@ -2,7 +2,7 @@
 ESP32 + PLC giả lập qua MQTT THẬT (Mosquitto) - để thử backend ở chế độ GATEWAY_MODE=mqtt khi chưa có phần cứng.
 
 Làm đúng như firmware 04_GATEWAY_ESP32/src/main.cpp:
-  - gửi telemetry d50/d100/d200 mỗi 2 giây lên farm/farm01/telemetry
+  - gửi telemetry d50/d100/d110/d200 mỗi 2 giây lên farm/farm01/telemetry
   - Last Will "offline" + "online" (retained) trên farm/farm01/gateway/status
   - nhận lệnh, kiểm tra hạn exp, ghi D203/D204 rồi D210=reqId, "PLC" xử lý và ghi D205/D206, gửi ack
   - --plc-down: giả lập đứt RS485 -> gửi {"plcOk": false}
@@ -31,7 +31,10 @@ T_STATUS = f"farm/{FARM}/gateway/status"
 
 # Lệnh D203 -> (thanh ghi trạng thái D100.., giá trị)
 COMMANDS = {1: [(100, 1)], 2: [(100, 0)], 3: [(101, 1)], 4: [(101, 0), (102, 0)],
-            5: [(103, 1)], 6: [(103, 0)], 7: [(104, 1)], 8: [(104, 0)]}
+            5: [(103, 1)], 6: [(103, 0)], 7: [(104, 1)], 8: [(104, 0)],
+            # cho ăn: D110 máy cá, D111 van cá, D112 van vịt, D113 van gà (giả lập không tự tắt)
+            9: [(110, 1), (111, 1)], 10: [(110, 0), (111, 0)], 11: [(112, 1)], 12: [(112, 0)],
+            13: [(113, 1)], 14: [(113, 0)]}
 
 
 class VirtualPlc:
@@ -45,6 +48,7 @@ class VirtualPlc:
         self.D[200] = 1          # phiên bản dữ liệu
         self.D[209] = 1          # cho phép REMOTE
         self.D[58] = self.D[59] = 1
+        self.D[118] = 1          # cho phép cho ăn
         self.temp, self.level = 29.0, 55.0
         self.override_until = {}
         self.lock = threading.Lock()
@@ -69,6 +73,8 @@ class VirtualPlc:
             self.D[53] = round(self.level * 10)
             self.D[54], self.D[55], self.D[56], self.D[57] = 550, 1200, 800, 10
             self.D[109] = (self.D[109] + 2) & 0x7FFF
+            lt = time.localtime()
+            self.D[119] = lt.tm_hour * 100 + lt.tm_min                # giờ PLC HHMM
             # Bắt tay lệnh: D210 khác D205 => yêu cầu mới
             if self.D[210] != 0 and self.D[210] != self.D[205]:
                 cmd = self.D[203]
@@ -167,7 +173,8 @@ def main():
             else:
                 seq += 1
                 client.publish(T_TELEMETRY, json.dumps(
-                    {"gw": GW, "seq": seq, "d50": plc.read(50), "d100": plc.read(100), "d200": plc.read(200)}))
+                    {"gw": GW, "seq": seq, "d50": plc.read(50), "d100": plc.read(100), "d110": plc.read(110),
+                     "d200": plc.read(200)}))
             time.sleep(2)
     except KeyboardInterrupt:
         pass

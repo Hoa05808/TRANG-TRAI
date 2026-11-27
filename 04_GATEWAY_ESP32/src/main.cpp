@@ -2,7 +2,7 @@
 //   PLC FX3U  <--RS485 / Modbus RTU-->  ESP32  <--Wi-Fi / MQTT-->  Mosquitto  <-->  Backend Spring Boot
 //
 // Nhiệm vụ:
-//   1. Mỗi 2 giây đọc D50..D59, D100..D109, D200..D209 và gửi telemetry (giá trị thô).
+//   1. Mỗi 2 giây đọc D50..D59, D100..D109, D110..D119, D200..D209 và gửi telemetry (giá trị thô).
 //      Không đọc được PLC -> gửi {"plcOk":false} thay vì số liệu cũ.
 //   2. Nhận lệnh từ backend, kiểm tra hạn (exp), ghi xuống PLC theo bắt tay reqId (D203, D204, rồi D210),
 //      chờ PLC xác nhận (D205 = reqId, kết quả D206) rồi gửi phản hồi, sau đó xóa D203.
@@ -91,7 +91,7 @@ String modbusErrorText(uint8_t code) {
 
 // ---------- MQTT ----------
 void publishJson(const String& topic, JsonDocument& doc) {
-    char buf[512];
+    char buf[768];  // 4 khối x 10 thanh ghi, tối đa ~400 ký tự
     size_t n = serializeJson(doc, buf, sizeof(buf));
     mqtt.publish(topic.c_str(), (const uint8_t*)buf, n, false);
 }
@@ -120,7 +120,7 @@ void onMqttMessage(char* topic, byte* payload, unsigned int len) {
     int val = doc["val"] | 0;
     long long exp = doc["exp"] | 0LL;
 
-    if (reqId < 1 || reqId > 32767 || cmd < 1 || cmd > 8) {
+    if (reqId < 1 || reqId > 32767 || cmd < 1 || cmd > CMD_MAX) {
         sendAck(reqId, cmd, ACK_REJECTED, "Lệnh không hợp lệ");
         return;
     }
@@ -161,8 +161,9 @@ void ensureMqtt() {
 
 // ---------- Telemetry ----------
 void readAndPublishTelemetry() {
-    int16_t d50[BLOCK_SIZE], d100[BLOCK_SIZE], d200[BLOCK_SIZE];
-    bool ok = readBlock(REG_SENSORS, d50) && readBlock(REG_STATUS, d100) && readBlock(REG_COMM, d200);
+    int16_t d50[BLOCK_SIZE], d100[BLOCK_SIZE], d110[BLOCK_SIZE], d200[BLOCK_SIZE];
+    bool ok = readBlock(REG_SENSORS, d50) && readBlock(REG_STATUS, d100) && readBlock(REG_FEED, d110)
+              && readBlock(REG_COMM, d200);
 
     if (!ok) {
         plcFailCount++;
@@ -185,10 +186,12 @@ void readAndPublishTelemetry() {
     doc["seq"] = ++seq;
     JsonArray a = doc["d50"].to<JsonArray>();
     JsonArray b = doc["d100"].to<JsonArray>();
+    JsonArray f = doc["d110"].to<JsonArray>();
     JsonArray c = doc["d200"].to<JsonArray>();
     for (int i = 0; i < BLOCK_SIZE; i++) {
         a.add(d50[i]);
         b.add(d100[i]);
+        f.add(d110[i]);
         c.add(d200[i]);
     }
     publishJson(TOPIC_TELEMETRY, doc);

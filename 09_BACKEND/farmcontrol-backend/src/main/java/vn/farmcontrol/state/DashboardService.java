@@ -49,7 +49,8 @@ public class DashboardService {
                 snap == null ? 0 : snap.uptime(),
                 alerts.activeCount(),
                 alerts.unacknowledgedActiveCount(),
-                Instant.now());
+                Instant.now(),
+                snap == null ? null : snap.feed());
     }
 
     private static DeviceState deviceState(FarmSnapshot snap, Device d, boolean online) {

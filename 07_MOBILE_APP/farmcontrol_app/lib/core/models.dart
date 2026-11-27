@@ -67,8 +67,29 @@ class SensorValues {
         dataValid = j['dataValid'] as bool? ?? false;
 }
 
+/// Cho ăn (D110..D119). null nếu Gateway chưa gửi.
+class FeedStatus {
+  final bool fishLow, duckLow, chickenLow, enabled;
+  final int fishToday, duckToday, chickenToday;
+  final String? plcClock;
+
+  FeedStatus.fromJson(Map<String, dynamic> j)
+      : fishLow = j['fishLow'] as bool? ?? false,
+        duckLow = j['duckLow'] as bool? ?? false,
+        chickenLow = j['chickenLow'] as bool? ?? false,
+        enabled = j['enabled'] as bool? ?? false,
+        fishToday = _i(j['fishToday']),
+        duckToday = _i(j['duckToday']),
+        chickenToday = _i(j['chickenToday']),
+        plcClock = j['plcClock'] as String?;
+
+  bool get anyLow => fishLow || duckLow || chickenLow;
+}
+
+bool isValveId(String id) => id.endsWith('VALVE') || id == 'VALVE_1';
+
 class DeviceView {
-  final String id; // PUMP_1, FAN_1, FAN_2, LIGHT_1, VALVE_1
+  final String id; // PUMP_1, FAN_1, FAN_2, LIGHT_1, VALVE_1, FISH_FEEDER, FISH_VALVE, DUCK_VALVE, CHICKEN_VALVE
   final String name;
   final String plcOutput;
   final DeviceState state;
@@ -94,6 +115,7 @@ class Dashboard {
   final int errorCode, alarmCode, plcUptime;
   final bool remoteEnabled;
   final int activeAlerts, unacknowledgedAlerts;
+  final FeedStatus? feed;
 
   Dashboard.fromJson(Map<String, dynamic> j)
       : connection = _conn(j['connection'] as String?),
@@ -109,7 +131,8 @@ class Dashboard {
         plcUptime = _i(j['plcUptime']),
         remoteEnabled = j['remoteEnabled'] as bool? ?? false,
         activeAlerts = _i(j['activeAlerts']),
-        unacknowledgedAlerts = _i(j['unacknowledgedAlerts']);
+        unacknowledgedAlerts = _i(j['unacknowledgedAlerts']),
+        feed = j['feed'] == null ? null : FeedStatus.fromJson(j['feed'] as Map<String, dynamic>);
 
   DeviceView? device(String id) {
     for (final d in devices) {

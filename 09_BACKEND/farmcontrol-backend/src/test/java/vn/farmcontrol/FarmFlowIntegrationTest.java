@@ -60,7 +60,7 @@ class FarmFlowIntegrationTest {
         int[] d50 = {(int) (temp * 10), 700, 280, (int) (level * 10), 500, 1000, 700, 5, 1, 1};
         int[] d100 = {pumpOn ? 1 : 0, 0, 0, 1, 0, 1, 1, 0, 0, 100};
         int[] d200 = {1, ++heartbeat, 1, 0, 0, 0, 0, 0, 0, 1};
-        events.publishEvent(new TelemetryReceived(new TelemetryMessage("test-gw", (long) heartbeat, d50, d100, d200),
+        events.publishEvent(new TelemetryReceived(new TelemetryMessage("test-gw", (long) heartbeat, d50, d100, null, d200),
                 Instant.now()));
     }
 

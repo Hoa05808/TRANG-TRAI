@@ -97,7 +97,7 @@ Sai mật khẩu 5 lần liên tiếp → khóa đăng nhập 5 phút (`429 TOO_
 ### Lệnh điều khiển
 | Phương thức | Đường dẫn | Ghi chú |
 |---|---|---|
-| GET | `/api/commands/types` | Danh sách lệnh: `PUMP_ON, PUMP_OFF, FAN_ON, FAN_OFF, LIGHT_ON, LIGHT_OFF, VALVE_OPEN, VALVE_CLOSE` |
+| GET | `/api/commands/types` | Danh sách lệnh: `PUMP_ON, PUMP_OFF, FAN_ON, FAN_OFF, LIGHT_ON, LIGHT_OFF, VALVE_OPEN, VALVE_CLOSE, FEED_FISH_START, FEED_FISH_STOP, FEED_DUCK_START, FEED_DUCK_STOP, FEED_CHICKEN_START, FEED_CHICKEN_STOP` |
 | POST | `/api/commands` | `{"type":"PUMP_ON"}` → `202`, trạng thái `SENT` |
 | GET | `/api/commands/{id}` | Trạng thái lệnh |
 

@@ -16,8 +16,16 @@ public enum CommandType {
     FAN_OFF(4, "Tắt quạt", Map.of(Device.FAN_1, false, Device.FAN_2, false)),
     LIGHT_ON(5, "Bật đèn", Map.of(Device.LIGHT_1, true)),
     LIGHT_OFF(6, "Tắt đèn", Map.of(Device.LIGHT_1, false)),
-    VALVE_OPEN(7, "Mở van", Map.of(Device.VALVE_1, true)),
-    VALVE_CLOSE(8, "Đóng van", Map.of(Device.VALVE_1, false));
+    // Van nước máng gà: PLC mở D414 giây rồi tự đóng (cùng lịch giờ với cho gà ăn)
+    VALVE_OPEN(7, "Mở van nước máng gà", Map.of(Device.VALVE_1, true)),
+    VALVE_CLOSE(8, "Đóng van nước máng gà", Map.of(Device.VALVE_1, false)),
+    // Cho ăn: PLC tự chạy hết chu kỳ theo thời gian D410..D413 rồi tự tắt
+    FEED_FISH_START(9, "Cho cá ăn ngay", Map.of(Device.FISH_FEEDER, true)),
+    FEED_FISH_STOP(10, "Dừng cho cá ăn", Map.of(Device.FISH_FEEDER, false, Device.FISH_VALVE, false)),
+    FEED_DUCK_START(11, "Cho vịt ăn ngay", Map.of(Device.DUCK_VALVE, true)),
+    FEED_DUCK_STOP(12, "Dừng cho vịt ăn", Map.of(Device.DUCK_VALVE, false)),
+    FEED_CHICKEN_START(13, "Cho gà ăn ngay", Map.of(Device.CHICKEN_VALVE, true)),
+    FEED_CHICKEN_STOP(14, "Dừng cho gà ăn", Map.of(Device.CHICKEN_VALVE, false));
 
     private final int plcCode;
     private final String displayName;

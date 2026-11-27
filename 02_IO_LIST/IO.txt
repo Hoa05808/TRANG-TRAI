@@ -14,7 +14,7 @@ Y0	PUMP_1 - Điều khiển máy bơm nước
 Y1	FAN_1 - Quạt thông gió 1
 Y2	FAN_2 - Quạt thông gió 2
 Y3	LIGHT_1 - Đèn chiếu sáng
-Y4	VALVE_1 - Van cấp nước
+Y4	VALVE_1 - Van nước xuống máng nước cho gà (mở cùng giờ gà ăn, D414 giây)
 Y5	ALARM_BUZZER - Còi cảnh báo
 Y6	RUN_LAMP - Đèn báo hệ thống chạy
 Y7	ERROR_LAMP - Đèn báo lỗi
@@ -294,5 +294,63 @@ D107	0 = không lỗi, 1 = cảm biến mực nước mâu thuẫn, 2 = dừng k
 D108	0 = không, 3 = bơm quá giờ, 4 = nhiệt độ cao, 5 = nước thấp mà bơm không chạy, 6 = cửa mở (mã cao nhất thắng)
 D209	PLC ghi: 1 khi REMOTE (X7) và Gateway còn kết nối và không dừng khẩn
 D0..D9	Nếu = 0 khi khởi động thì PLC nạp giá trị mẫu. NÊN đặt vùng giữ (latch) D0..D99 trong PLC Parameter.
+
+==== CHO ĂN (bổ sung 26/11/2026) ====
+Cần thêm I/O: FX3U-16M chỉ có X0-X7/Y0-Y7 -> lắp module mở rộng (vd FX2N-8EX + FX2N-8EYR) hoặc dùng FX3U-32M.
+X10	FISH_FEED_OK - Cảm biến thùng thức ăn CÁ (ON = còn thức ăn)
+X11	DUCK_FEED_OK - Cảm biến thùng thức ăn VỊT (ON = còn thức ăn)
+X12	CHICKEN_FEED_OK - Cảm biến thùng thức ăn GÀ (ON = còn thức ăn)
+Ghi chú: cảm biến ON = còn thức ăn để đứt dây cũng báo "sắp hết" (an toàn). Nếu cảm biến ngược lại, đổi LDI X010..X012 thành LD ở đoạn F5.
+Y10	FISH_FEEDER - Máy cho cá ăn (máy rải/ thổi)
+Y11	FISH_FEED_VALVE - Van thức ăn từ thùng xuống máy cho cá ăn
+Y12	DUCK_FEED_VALVE - Van thức ăn xuống máng vịt
+Y13	CHICKEN_FEED_VALVE - Van thức ăn cho gà
+
+Trình tự cho cá ăn: Y10 chạy -> sau 3 s mở Y11 -> Y11 mở D410 giây rồi đóng -> Y10 chạy thêm D411 giây cho sạch thức ăn -> tắt.
+Vịt: Y12 mở D412 giây. Gà: Y13 mở D413 giây.
+Lịch chạy theo đồng hồ PLC, ở mọi chế độ AUTO/MANUAL/REMOTE, chỉ cần hệ thống RUN (M1) và không dừng khẩn.
+Dừng khẩn / STOP: tắt ngay mọi máy và van cho ăn, hủy lần cho ăn đang chạy (không tự chạy lại).
+
+Thanh ghi cài đặt (vùng giữ khi mất điện D200-D511, không cần chỉnh latch)
+D400	Giờ cá ăn lần 1 (HHMM)	mẫu 700 = 07:00
+D401	Giờ cá ăn lần 2	mẫu 1800 = 18:00
+D402	Giờ vịt ăn lần 1	mẫu 600
+D403	Giờ vịt ăn lần 2	mẫu 1800
+D404	Giờ gà ăn lần 1	mẫu 600
+D405	Giờ gà ăn lần 2	mẫu 1300
+D406	Giờ gà ăn lần 3	mẫu 2000
+	Đặt > 2359 (vd 9999) để TẮT khung giờ đó. Nếu = 0 khi khởi động thì PLC nạp giá trị mẫu.
+D410	Thời gian mở van thức ăn cá (giây)	mẫu 60
+D411	Máy cho cá ăn chạy thêm sau khi đóng van (giây)	mẫu 15
+D412	Thời gian mở van vịt (giây)	mẫu 30
+D413	Thời gian mở van gà (giây)	mẫu 30
+
+Bit / timer
+M200/M201/M202	Đến giờ cho cá / vịt / gà ăn (đúng phút)
+M203	Cho phép cho ăn (M0 và M1 và không dừng khẩn)
+M210/M211/M212	Đang cho cá / vịt / gà ăn   M213	Cá: đã đóng van, máy chạy thêm
+M219	Xung 00:00 xóa số lần cho ăn trong ngày
+M220/M221/M222	Thùng cá / vịt / gà sắp hết (trễ 30 s)   M224	Có thùng sắp hết (vào M109, đèn Y7, không kêu còi)
+M230..M235	Lệnh từ xa: cá bắt đầu/dừng, vịt bắt đầu/dừng, gà bắt đầu/dừng
+M240..M245	Nút HMI (nhấn nhả, PLC tự xóa): cá bắt đầu/dừng, vịt bắt đầu/dừng, gà bắt đầu/dừng
+T10 trễ mở van cá 3 s, T11 van cá, T12 máy cá chạy thêm, T13 van vịt, T14 van gà, T15..T17 trễ báo thùng sắp hết 30 s
+D74..D81	Đặt timer = D410..D413 x 10      D82	Giờ PLC dạng HHMM (D8015 x 100 + D8014)
+
+Trạng thái gửi lên app (ESP32 đọc khối D110..D119)
+D110..D113	Máy cá, van cá, van vịt, van gà (0/1)
+D114	Thùng sắp hết: bit 1 = cá, 2 = vịt, 4 = gà
+D115..D117	Số lần cho cá / vịt / gà ăn hôm nay (xóa lúc 00:00)
+D118	1 = cho phép cho ăn
+D119	Giờ PLC HHMM (để kiểm tra đồng hồ PLC có đúng không)
+D320..D322	Tổng số lần cho cá / vịt / gà ăn (vùng giữ)
+
+VAN NƯỚC Y4 (VALVE_1) = van nước xuống máng nước cho gà
+Mở cùng giờ cho gà ăn (D404/D405/D406), mở D414 giây (mẫu 60) rồi tự đóng.
+M83 = đang mở van nước (chu kỳ), T18 = timer D414 (D84 = D414 x 10).
+Nút HMI: M246 mở, M247 đóng (PLC tự xóa). Lệnh từ xa: 7 mở, 8 đóng. Lệnh 7 bị từ chối khi M203 = OFF.
+Dừng khẩn / STOP: đóng van ngay.
+
+Lệnh từ xa D203 mới: 9 cho cá ăn, 10 dừng cá, 11 cho vịt ăn, 12 dừng vịt, 13 cho gà ăn, 14 dừng gà.
+Lệnh 9/11/13 bị từ chối (D206 = 2) khi M203 = OFF. Lệnh dừng luôn được nhận.
 
 

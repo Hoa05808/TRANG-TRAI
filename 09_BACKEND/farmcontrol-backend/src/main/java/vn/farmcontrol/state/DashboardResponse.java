@@ -5,6 +5,7 @@ import java.util.List;
 import vn.farmcontrol.plc.Device;
 import vn.farmcontrol.plc.PlcEnums.OperationMode;
 import vn.farmcontrol.plc.PlcEnums.PlcState;
+import vn.farmcontrol.state.FarmSnapshot.FeedStatus;
 import vn.farmcontrol.state.FarmSnapshot.SensorValues;
 import vn.farmcontrol.state.FarmStateService.ConnectionStatus;
 
@@ -28,7 +29,8 @@ public record DashboardResponse(
         int plcUptime,
         long activeAlerts,
         long unacknowledgedAlerts,
-        Instant serverTime) {
+        Instant serverTime,
+        FeedStatus feed) {
 
     public enum DeviceState { ON, OFF, UNKNOWN }
 

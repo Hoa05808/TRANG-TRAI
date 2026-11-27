@@ -11,7 +11,8 @@ public enum AlertType {
     PUMP_RUNTIME_EXCEEDED(AlertSeverity.WARNING, "Bơm chạy quá thời gian"),
     PUMP_NO_WATER_RISE(AlertSeverity.CRITICAL, "Bơm chạy nhưng mực nước không tăng"),
     GATEWAY_OFFLINE(AlertSeverity.CRITICAL, "Mất kết nối Gateway"),
-    PLC_LINK_LOST(AlertSeverity.CRITICAL, "Mất kết nối PLC – Gateway");
+    PLC_LINK_LOST(AlertSeverity.CRITICAL, "Mất kết nối PLC – Gateway"),
+    FEED_LOW(AlertSeverity.WARNING, "Thùng thức ăn sắp hết");
 
     private final AlertSeverity defaultSeverity;
     private final String title;

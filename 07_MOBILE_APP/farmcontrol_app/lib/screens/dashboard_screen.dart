@@ -145,12 +145,14 @@ IconData deviceIcon(String id) => switch (id) {
       'FAN_1' || 'FAN_2' => Icons.mode_fan_off_outlined,
       'LIGHT_1' => Icons.lightbulb,
       'VALVE_1' => Icons.plumbing,
+      'FISH_FEEDER' || 'FISH_VALVE' => Icons.set_meal,
+      'DUCK_VALVE' || 'CHICKEN_VALVE' => Icons.egg_alt,
       _ => Icons.power,
     };
 
 String deviceStateLabel(DeviceView d) => switch (d.state) {
-      DeviceState.on => d.id == 'VALVE_1' ? 'ĐANG MỞ' : 'ĐANG CHẠY',
-      DeviceState.off => d.id == 'VALVE_1' ? 'ĐÓNG' : 'TẮT',
+      DeviceState.on => isValveId(d.id) ? 'ĐANG MỞ' : 'ĐANG CHẠY',
+      DeviceState.off => isValveId(d.id) ? 'ĐÓNG' : 'TẮT',
       DeviceState.unknown => 'KHÔNG RÕ',
     };
 

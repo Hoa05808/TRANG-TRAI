@@ -31,6 +31,8 @@
 // ---------- Thanh ghi PLC (xem 02_IO_LIST và 08_DOCUMENTATION) ----------
 #define REG_SENSORS      50    // D50..D59
 #define REG_STATUS       100   // D100..D109
+#define REG_FEED         110   // D110..D119 cho ăn (máy, van, thùng sắp hết, số lần hôm nay, giờ PLC)
+#define CMD_MAX          14    // mã lệnh D203 lớn nhất PLC nhận (9..14 = cho ăn)
 #define REG_COMM         200   // D200..D209
 #define REG_GW_HEARTBEAT 202   // ESP32 ghi bộ đếm heartbeat Gateway
 #define REG_CMD_ID       203   // ESP32 ghi mã lệnh

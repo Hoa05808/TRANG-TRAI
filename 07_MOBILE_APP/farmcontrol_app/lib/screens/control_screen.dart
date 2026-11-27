@@ -22,7 +22,11 @@ const _groups = [
   _ControlGroup('Máy bơm nước', ['PUMP_1'], 'PUMP_ON', 'PUMP_OFF', 'BẬT', 'TẮT'),
   _ControlGroup('Quạt thông gió', ['FAN_1', 'FAN_2'], 'FAN_ON', 'FAN_OFF', 'BẬT', 'TẮT'),
   _ControlGroup('Đèn chiếu sáng', ['LIGHT_1'], 'LIGHT_ON', 'LIGHT_OFF', 'BẬT', 'TẮT'),
-  _ControlGroup('Van cấp nước', ['VALVE_1'], 'VALVE_OPEN', 'VALVE_CLOSE', 'MỞ', 'ĐÓNG'),
+  _ControlGroup('Van nước máng gà', ['VALVE_1'], 'VALVE_OPEN', 'VALVE_CLOSE', 'MỞ', 'ĐÓNG'),
+  // Cho ăn: PLC tự chạy hết chu kỳ theo thời gian đặt trong PLC rồi tự tắt
+  _ControlGroup('Cho cá ăn', ['FISH_FEEDER', 'FISH_VALVE'], 'FEED_FISH_START', 'FEED_FISH_STOP', 'CHO ĂN', 'DỪNG'),
+  _ControlGroup('Cho vịt ăn', ['DUCK_VALVE'], 'FEED_DUCK_START', 'FEED_DUCK_STOP', 'CHO ĂN', 'DỪNG'),
+  _ControlGroup('Cho gà ăn', ['CHICKEN_VALVE'], 'FEED_CHICKEN_START', 'FEED_CHICKEN_STOP', 'CHO ĂN', 'DỪNG'),
 ];
 
 /// 02 · Điều khiển thiết bị.
@@ -79,12 +83,44 @@ class ControlScreen extends StatelessWidget {
           ]),
         ),
       ],
+      if (d.feed != null) ...[
+        const SizedBox(height: 12),
+        _FeedPanel(feed: d.feed!),
+      ],
       const SizedBox(height: 12),
       ResponsiveGrid(minItemWidth: 300, children: [
         for (final g in _groups) _ControlCard(group: g, dashboard: d, locked: lockReason != null),
       ]),
     ]);
   }
+}
+
+/// Thùng thức ăn và số lần đã cho ăn hôm nay (theo đồng hồ PLC).
+class _FeedPanel extends StatelessWidget {
+  final FeedStatus feed;
+  const _FeedPanel({required this.feed});
+
+  Widget _bin(String name, bool low, int today) => StatusChip(
+        label: '$name: ${low ? 'SẮP HẾT' : 'CÒN'} · $today lần',
+        color: low ? Scada.warning : Scada.running,
+        icon: low ? Icons.warning_amber : Icons.inventory_2,
+      );
+
+  @override
+  Widget build(BuildContext context) => Panel(
+        title: 'Thùng thức ăn',
+        icon: Icons.inventory_2,
+        child: Wrap(spacing: 10, runSpacing: 10, crossAxisAlignment: WrapCrossAlignment.center, children: [
+          _bin('Cá', feed.fishLow, feed.fishToday),
+          _bin('Vịt', feed.duckLow, feed.duckToday),
+          _bin('Gà', feed.chickenLow, feed.chickenToday),
+          Text(
+              feed.enabled
+                  ? 'Giờ PLC: ${feed.plcClock ?? '--:--'} (lịch cho ăn chạy theo giờ này)'
+                  : 'PLC đang dừng hoặc dừng khẩn: không cho ăn',
+              style: Theme.of(context).textTheme.bodySmall),
+        ]),
+      );
 }
 
 class _ControlCard extends StatelessWidget {
